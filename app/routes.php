@@ -41,6 +41,17 @@ Route::post('/login', 'Admin\AdminController:doLogin');
 /** Route to documentation */
 Route::get('/doc(/:page+)', 'DocController:index');
 
+/** Route to file listing */
+Route::get('/getFiles', 'FilesController:getFiles');
+
+/** Route to list set by user*/
+Route::get('/listSet/:iduser', 'FilesController:listSetByUser');
+
+/** Route to list metadataformat by set and by user */
+Route::get('/listMetadataformat/:iduser/:set', 'FilesController:listMetadataformat');
+
+/** Route to list files by metadataformat by set and by user */
+Route::get('/listFiles/:iduser/:set/:metadataformat', 'FilesController:listFiles');
 
 foreach (Module::getModules() as $module) {
     $module->registerPublicRoute();
