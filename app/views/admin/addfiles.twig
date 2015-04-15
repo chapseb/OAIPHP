@@ -1,0 +1,24 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h3 class="page-header">Ajout de fichiers dans le set {{ set_name }}</h3>
+            <form role="form" class="form-horizontal" action="{{urlFor('addfiles')}}" method="POST">
+                <div class="form-group">
+                    <label for="data_set" class="col-lg-4 control-label">Nom du set</label>
+                    <div class="col-lg-4">
+                        <input type="text" class="input-sm form-control" name="data_set" id="data_set" placeholder="Nom du set">
+                    </div>
+                </div>
+                <input type="submit"/>
+            </form>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock %}
+

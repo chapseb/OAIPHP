@@ -1,0 +1,28 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="text-center">
+            <h3 class="page-header">Liste de vos sets</h3>
+            <ul class="list-group">
+            {% for set in listsets %}
+                <li class="list-group-item">
+                    <div class="row">
+                    <div class="col-lg-4">{{ set.set_name }}</div>
+                        <div class="col-lg-8">
+                            <a class="btn btn-default" role="button" href="{{ urlFor('listmetadataformat', {'set': set.set_name} )}}">Liste des formats présents</a>
+                            <a class="btn btn-success" role="button" href="{{ urlFor('displayaddfiles')}}">Ajouter des fichiers</a>
+                            <a class="btn btn-danger" role="button">Supprimer ce set</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock %}

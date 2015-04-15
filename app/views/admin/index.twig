@@ -6,7 +6,11 @@
         {{include('admin/sidebar.twig')}}
         <div id="page-wrapper">
             {% block content %}
-                {% include 'admin/dashboard.twig' %}
+                {% if template is defined %}
+                    {% include template %}
+                {% else %}
+                    {% include 'admin/dashboard.twig' %}
+                {% endif %}
             {% endblock %}
         </div>
         <!-- /#page-wrapper -->

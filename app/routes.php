@@ -7,7 +7,6 @@ Route::group(
     '/admin',
     function(){
         if(!Sentry::check()){
-
             if(Request::isAjax()){
                 Response::headers()->set('Content-Type', 'application/json');
                 Response::setBody(json_encode(
@@ -23,10 +22,28 @@ Route::group(
                 Response::redirect(App::urlFor('login').'?redirect='.base64_encode($redirect));
             }
         }
-    },
+   },
     function() use ($app) {
         /** sample namespaced controller */
         Route::get('/', 'Admin\AdminController:index')->name('admin');
+
+        /** Route to list metadataformat by set and by user */
+        Route::get('/listMetadataformat/:set', 'Admin\FilesController:listMetadataformat')->name('listmetadataformat');
+
+        /** Route to list set by user*/
+        Route::get('/listSet', 'Admin\FilesController:listSetByUser')->name('listset');
+
+        /** Route to list files by metadataformat by set and by user */
+        Route::get('/listFiles/:set/:metadataformat', 'Admin\FilesController:listFiles')->name('listfile');
+
+        /** Route to display a form to create a set*/
+        Route::get('/createSet', 'Admin\FilesController:createForm')->name('createform');
+
+        Route::post('/addSet', 'Admin\FilesController:addSet')->name('addset');
+
+        Route::get('/displayAddFiles', 'Admin\FilesController:displayAddFiles')->name('displayaddfiles');
+
+        Route::post('/addFiles', 'Admin\FilesController:addFiles')->name('addfiles');
 
         foreach (Module::getModules() as $module) {
             $module->registerAdminRoute();
@@ -41,17 +58,6 @@ Route::post('/login', 'Admin\AdminController:doLogin');
 /** Route to documentation */
 Route::get('/doc(/:page+)', 'DocController:index');
 
-/** Route to file listing */
-Route::get('/getFiles', 'FilesController:getFiles');
-
-/** Route to list set by user*/
-Route::get('/listSet/:iduser', 'FilesController:listSetByUser');
-
-/** Route to list metadataformat by set and by user */
-Route::get('/listMetadataformat/:iduser/:set', 'FilesController:listMetadataformat');
-
-/** Route to list files by metadataformat by set and by user */
-Route::get('/listFiles/:iduser/:set/:metadataformat', 'FilesController:listFiles');
 
 foreach (Module::getModules() as $module) {
     $module->registerPublicRoute();
