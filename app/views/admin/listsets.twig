@@ -1,5 +1,3 @@
-{% extends 'master.twig' %}
-
 {% block body %}
 <div class="container">
     <div class="row">
@@ -10,9 +8,22 @@
                 <li class="list-group-item">
                     <div class="row">
                     <div class="col-lg-4">{{ set.set_name }}</div>
-                        <div class="col-lg-8">
+                       <div class="col-lg-8">
                             <a class="btn btn-default" role="button" href="{{ urlFor('listmetadataformat', {'set': set.set_name} )}}">Liste des formats présents</a>
-                            <a class="btn btn-success" role="button" href="{{ urlFor('displayaddfiles')}}">Ajouter des fichiers</a>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-success">
+                                    Ajouter des fichiers
+                                </button>
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >
+                                    <span class="caret"></span>
+                                    <span class="sr-only"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    {% for format in listformats%}
+                                        <li><a href="{{ urlFor('displayaddfiles',{ 'set': set.set_name, 'format': format.name })}}">{{ format.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                             <a class="btn btn-danger" role="button">Supprimer ce set</a>
                         </div>
                     </div>

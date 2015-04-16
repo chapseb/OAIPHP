@@ -41,7 +41,7 @@ Route::group(
 
         Route::post('/addSet', 'Admin\FilesController:addSet')->name('addset');
 
-        Route::get('/displayAddFiles', 'Admin\FilesController:displayAddFiles')->name('displayaddfiles');
+        Route::get('/displayAddFiles/:set/:format', 'Admin\FilesController:displayAddFiles')->name('displayaddfiles');
 
         Route::post('/addFiles', 'Admin\FilesController:addFiles')->name('addfiles');
 

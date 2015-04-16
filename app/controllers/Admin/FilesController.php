@@ -6,6 +6,7 @@ use \Model\Filepath;
 use \Model\ConcordUserFilePath;
 use \Model\Resumptiontoken;
 use \Model\Setinfos;
+use \Model\Settypes;
 use \Sentry;
 use \DB;
 use \App;
@@ -45,6 +46,10 @@ Class FilesController extends BaseController
             ->select('set_name')
             ->where('id_user', $user['id'])
             ->get();
+         $this->data['listformats']
+             = DB::table('set_types')
+             ->select('name')
+             ->get();
         $this->data['template'] = 'admin/listsets.twig';
         App::render('admin/index.twig', $this->data);
     }
@@ -105,20 +110,28 @@ Class FilesController extends BaseController
         $dataSet->save();
     }
 
-    public function displayAddFiles()
+    public function displayAddFiles($setname, $format)
     {
         $path = "/var/www/ead_files" . "". "/oai";
-        $ = '';
-        $OaiDirectory = opendir($path) or die('Erreur');
-        while($entry = @readdir($OaiDirectory)) {
+        $oaiDirectory = opendir($path) or die('Erreur');
+        $listFiles = array();
+        while($entry = @readdir($oaiDirectory)) {
             if( $entry != '.' && $entry != '..' ) {
-                $test .= '<li>'.$entry.'</li>';
+                array_push($listFiles, $entry);
             }
         }
-        closedir($OaiDirectory);
-        print_r($test);
+        closedir($oaiDirectory);
+        $this->data['setname']  = $setname;
+        $this->data['files']    = $listFiles;
+        $this->data['format']   = $format;
         $this->data['template'] = 'admin/addfiles.twig';
         App::render('admin/index.twig', $this->data);
+    }
+
+    public function addFiles()
+    {
+        $filesToAdd = Input::post('list_files');
+        print_r($filesToAdd);
     }
 
 }
