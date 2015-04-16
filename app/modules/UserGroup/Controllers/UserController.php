@@ -119,6 +119,7 @@ class UserController extends BaseController
             $user->email        = $input['email'];
             $user->first_name   = $input['first_name'];
             $user->last_name    = $input['last_name'];
+            $user->organization = $input['organization'];
 
             if($input['password']){
                 $user->password = $input['password'];
@@ -171,6 +172,7 @@ class UserController extends BaseController
                 'password'    => $input['password'],
                 'first_name'  => $input['first_name'],
                 'last_name'   => $input['last_name'],
+                'organization'=> $input['organization'],
                 'activated'   => 1
             ));
 
