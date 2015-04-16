@@ -112,7 +112,8 @@ Class FilesController extends BaseController
 
     public function displayAddFiles($setname, $format)
     {
-        $path = "/var/www/ead_files" . "". "/oai";
+        $organization = Sentry::getUser()['organization'];
+        $path = App::config('pathfile') . $organization . "/" . $format;
         $oaiDirectory = opendir($path) or die('Erreur');
         $listFiles = array();
         while($entry = @readdir($oaiDirectory)) {
