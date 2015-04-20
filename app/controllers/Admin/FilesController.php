@@ -131,8 +131,32 @@ Class FilesController extends BaseController
 
     public function addFiles()
     {
-        $filesToAdd = Input::post('list_files');
-        print_r($filesToAdd);
+        $listExistingFiles = DB::table('filepaths')
+                                ->lists('xml_path');
+        $format            = Input::post('format');
+        $organization      = Sentry::getUser()['organization'];
+        $filesToAdd     = Input::post('list_files');
+        foreach ( $filesToAdd as &$file) {
+            $file = "/" . $organization . "/" . $format . "/" . $file;
+        }
+
+        $filesToAdd = array_diff($filesToAdd, $listExistingFiles);
+
+        // get form value
+        $setname        = Input::post('setname');
+        $date           = date('Y-m-d H:i:s');
+        // creation of Filepath object to save
+        foreach ( $filesToAdd as &$file ) {
+            $addFile = new \Filepath;
+            $addFile->data_set          = $setname;
+            $addFile->metadata_format   = $format;
+            $addFile->xml_path          = $file;
+            $addFile->oai_identifier    = uniqid();
+            $addFile->creation_date     = $date;
+            $addFile->modification_date = $date;
+            $addFile->state             = 'Published';
+            $addFile->save();
+        }
     }
 
 }
