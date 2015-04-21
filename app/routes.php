@@ -43,7 +43,13 @@ Route::group(
 
         Route::get('/displayAddFiles/:set/:format', 'Admin\FilesController:displayAddFiles')->name('displayaddfiles');
 
+        Route::get('/displayDeleteFiles/:set/:format', 'Admin\FilesController:displayDeleteFiles')->name('displaydeletefiles');
+
         Route::post('/addFiles', 'Admin\FilesController:addFiles')->name('addfiles');
+
+        Route::get('/deleteSet/:set', 'Admin\FilesController:deleteSet')->name('deleteset');
+
+        Route::post('/deleteFile/:set', 'Admin\FilesController:deleteFile')->name('deletesetfiles');
 
         foreach (Module::getModules() as $module) {
             $module->registerAdminRoute();

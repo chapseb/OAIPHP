@@ -24,7 +24,22 @@
                                     {% endfor %}
                                 </ul>
                             </div>
-                            <a class="btn btn-danger" role="button">Supprimer ce set</a>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-danger">
+                                    Supprimer des fichiers
+                                </button>
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false" >
+                                    <span class="caret"></span>
+                                    <span class="sr-only"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    {% for format in listformats%}
+                                        <li><a href="{{ urlFor('displaydeletefiles',{ 'set': set.set_name, 'format': format.name })}}">{{ format.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+ 
+                            <a class="btn btn-danger" role="button" href="{{ urlFor('deleteset', {'set': set.set_name })}}">Supprimer ce set</a>
                         </div>
                     </div>
                 </li>

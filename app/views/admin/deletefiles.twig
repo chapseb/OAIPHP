@@ -1,0 +1,32 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h3 class="page-header">Suppression de fichiers {{ format }} dans le set {{ setname }}</h3>
+            <form role="form" class="form-horizontal" action="{{urlFor('deletesetfiles', {'set':  setname })}}" method="POST">
+                <div class="form-group">
+                    <div class="col-lg-6">
+                        {% for file in files %}
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="list_files[]" value="{{ file.xml_path }}">
+                                {{ file.xml_path }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <input type="hidden" name="format" value="{{ format }}">
+                <input type="hidden" name="setname" value="{{ setname }}">
+                <input type="submit"/>
+            </form>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock %}
+

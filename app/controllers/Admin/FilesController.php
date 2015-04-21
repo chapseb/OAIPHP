@@ -7,6 +7,7 @@ use \Model\ConcordUserFilePath;
 use \Model\Resumptiontoken;
 use \Model\Setinfos;
 use \Model\Settypes;
+use \Model\Deletedfiles;
 use \Sentry;
 use \DB;
 use \App;
@@ -49,6 +50,7 @@ Class FilesController extends BaseController
          $this->data['listformats']
              = DB::table('set_types')
              ->select('name')
+             ->where('Published')
              ->get();
         $this->data['template'] = 'admin/listsets.twig';
         App::render('admin/index.twig', $this->data);
@@ -103,9 +105,10 @@ Class FilesController extends BaseController
      */
     public function addSet()
     {
-        $setname  = Input::post('data_set');
-        $dataSet  = new \Setinfos;
+        $setname           = Input::post('data_set');
+        $dataSet           = new \Setinfos;
         $dataSet->set_name = $setname;
+        $dataSet->state    = 'Published';
         $dataSet->id_user  = Sentry::getUser()['id'];
         $dataSet->save();
     }
@@ -129,6 +132,19 @@ Class FilesController extends BaseController
         App::render('admin/index.twig', $this->data);
     }
 
+    public function displayDeleteFiles($setname, $format)
+    {
+        $this->data['files'] = DB::table('filepaths')
+            ->select('xml_path')
+            ->where('data_set', $setname)
+            ->where('metadata_format', $format)
+            ->where('state', 'Published')
+            ->get();
+        $this->data['setname']  = $setname;
+        $this->data['format']   = $format;
+        $this->data['template'] = 'admin/deletefiles.twig';
+        App::render('admin/index.twig', $this->data);
+    }
     public function addFiles()
     {
         $listExistingFiles = DB::table('filepaths')
@@ -159,4 +175,51 @@ Class FilesController extends BaseController
         }
     }
 
+    public function deleteSet($set)
+    {
+        $filesToDelete = DB::table('filepaths')
+            ->select('xml_path')
+            ->where('data_set', $set)
+            ->where('state', 'Published')
+            ->get();
+        foreach ( $filesToDelete as $fileToDelete ) {
+            // get the oai_identifier
+            $databaseSelect = DB::table('filepaths')
+            ->select('oai_identifier')
+            ->where('xml_path', $fileToDelete['xml_path'])
+            ->get();
+
+            $databaseDeleted = \Filepath::where('xml_path', $fileToDelete['xml_path'])
+                ->update(['xml_path' => 'NULL', 'state' => 'Removed']);
+
+            /* creation and save of Deletedfiles object */
+            $deleteFile = new \Deletedfiles;
+            $deleteFile->xml_path = $fileToDelete['xml_path'];
+            $deleteFile->oai_identifier = $databaseSelect[0]['oai_identifier'];
+            $deleteFile->save();
+        }
+        /* set is in removed state to do not display in set list */
+        $deleteSet = \Setinfos::where('set_name', $set)
+            ->update(['state' => 'Removed']);
+    }
+    public function deleteFile($set)
+    {
+        $filesToDelete = Input::post('list_files');
+        foreach ( $filesToDelete as $fileToDelete ) {
+            // get the oai_identifier
+            $databaseSelect = DB::table('filepaths')
+            ->select('oai_identifier')
+            ->where('xml_path', $fileToDelete)
+            ->get();
+
+            $databaseDeleted = \Filepath::where('xml_path', $fileToDelete)
+                ->update(['xml_path' => 'NULL', 'state' => 'Removed']);
+
+            /* creation and save of Deletedfiles object */
+            $deleteFile = new \Deletedfiles;
+            $deleteFile->xml_path = $fileToDelete;
+            $deleteFile->oai_identifier = $databaseSelect[0]['oai_identifier'];
+            $deleteFile->save();
+        }
+    }
 }
