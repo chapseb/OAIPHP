@@ -21,7 +21,7 @@ Class FilesController extends BaseController
      *
      * @param string $path path to the directory
      */
-    public function getFiles()
+    /*public function getFiles()
     {
         $user = Sentry::getUser();
         $path = '/var/www/ead_files/lancelot/';
@@ -33,11 +33,12 @@ Class FilesController extends BaseController
             asort($files);
         }
         App::render('admin/listFiles.twig', $files);
-    }
+    }*/
 
     /**
-     * 
+     * List set for a user
      *
+     * @return void
      */
     public function listSetByUser()
     {
@@ -57,8 +58,11 @@ Class FilesController extends BaseController
     }
 
     /**
+     * Get the list of format file accepted in a set
      *
+     * @param string $nameSet name of a set
      *
+     * @return void
      */
     public function listMetadataformat($nameSet)
     {
@@ -89,19 +93,20 @@ Class FilesController extends BaseController
     }
 
     /**
+     * Render the create set template
      *
-     *
+     * @return void
      */
     public function createForm()
     {
-        $this->data['template'] = 'admin/createform.twig';
+        $this->data['template'] = 'admin/createset.twig';
         App::render('admin/index.twig', $this->data);
     }
 
     /**
+     * Add a set for a the connected user
      *
-     *
-     *
+     * @return void
      */
     public function addSet()
     {
@@ -113,6 +118,14 @@ Class FilesController extends BaseController
         $dataSet->save();
     }
 
+    /**
+     * Render the add files template
+     *
+     * @param string $setname Name of the set
+     * @param string $format  Type of format
+     *
+     * @return void
+     */
     public function displayAddFiles($setname, $format)
     {
         $organization = Sentry::getUser()['organization'];
@@ -132,6 +145,15 @@ Class FilesController extends BaseController
         App::render('admin/index.twig', $this->data);
     }
 
+
+    /**
+     * Render the template of possible deleting files in a set
+     *
+     * @param string $setname Name of the setname
+     * @param string $format  Name of the format of files
+     *
+     * @return void
+     */
     public function displayDeleteFiles($setname, $format)
     {
         $this->data['files'] = DB::table('filepaths')
@@ -145,6 +167,13 @@ Class FilesController extends BaseController
         $this->data['template'] = 'admin/deletefiles.twig';
         App::render('admin/index.twig', $this->data);
     }
+
+
+    /**
+     * Add files in a set
+     *
+     * @return void
+     */
     public function addFiles()
     {
         $listExistingFiles = DB::table('filepaths')
@@ -175,6 +204,13 @@ Class FilesController extends BaseController
         }
     }
 
+    /**
+     * Delete an entiere set
+     *
+     * @param string $set Set to delete
+     *
+     * @return void
+     */
     public function deleteSet($set)
     {
         $filesToDelete = DB::table('filepaths')
@@ -202,6 +238,14 @@ Class FilesController extends BaseController
         $deleteSet = \Setinfos::where('set_name', $set)
             ->update(['state' => 'Removed']);
     }
+
+    /**
+     * Delete files in a set
+     *
+     * @param string $set Set which we delete file
+     *
+     * @return void
+     */
     public function deleteFile($set)
     {
         $filesToDelete = Input::post('list_files');
