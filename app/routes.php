@@ -49,7 +49,7 @@ Route::group(
 
         Route::get('/deleteSet/:set', 'Admin\FilesController:deleteSet')->name('deleteset');
 
-        Route::post('/deleteFile/:set', 'Admin\FilesController:deleteFile')->name('deletesetfiles');
+        Route::post('/deleteFile/:set', 'Admin\FilesController:deleteFiles')->name('deletesetfiles');
 
         foreach (Module::getModules() as $module) {
             $module->registerAdminRoute();
