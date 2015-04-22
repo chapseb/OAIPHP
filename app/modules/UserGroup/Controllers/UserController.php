@@ -7,12 +7,14 @@ use \View;
 use \Menu;
 use \User;
 use \Input;
+use \DB;
 use \Sentry;
 use \Request;
 use \Response;
 use \Exception;
 use \Admin\BaseController;
 use \Cartalyst\Sentry\Users\UserNotFoundException;
+use \Model\Settypes;
 
 class UserController extends BaseController
 {
@@ -175,6 +177,17 @@ class UserController extends BaseController
                 'organization'=> $input['organization'],
                 'activated'   => 1
             ));
+
+
+            $pathToMakeDirectories = App::config('pathfile'). $input['organization'];
+            mkdir($pathToMakeDirectories, 0775);
+            $existingFormat = DB::table('set_types')
+                ->lists('name');
+            $listFormat = '';
+            foreach ($existingFormat as $format) {
+                $listFormat .= ' ' . $format;
+                mkdir($pathToMakeDirectories . "/". $format, 0775);
+            }
 
             $success = true;
             $message = 'User created successfully';
