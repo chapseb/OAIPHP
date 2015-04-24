@@ -11,6 +11,7 @@ use \Sentry;
 use \DB;
 use \App;
 use \Input;
+use \Response;
 
 Class FilesController extends BaseController
 {
@@ -224,9 +225,13 @@ Class FilesController extends BaseController
         // creation of Filepath object to save
         foreach ( $filesToAdd as &$file ) {
             $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
-            $create = $xmlFile->xpath('.//creation//date[@normal]');
-            print_r($create);
-            break;
+            /*if ($format == 'ead') {
+                $create = $xmlFile->xpath('.//creation/date');
+                $create = (string) $create[1]['normal'];
+            } else*/if ($format == 'ape_ead') {
+                $create = $xmlFile->xpath('eadheader');
+                print_r($create);
+            }
             $addFile = new \Filepath;
             $addFile->data_set          = $setname;
             $addFile->metadata_format   = $format;
@@ -254,29 +259,46 @@ Class FilesController extends BaseController
             ->where('data_set', $set)
             ->where('state', 'Published')
             ->get();
-        foreach ( $filesToDelete as $fileToDelete ) {
-            // get the oai_identifier
-            $databaseSelect = DB::table('filepaths')
-            ->select('oai_identifier')
-            ->where('xml_path', $fileToDelete['xml_path'])
-            ->get();
+        if (!empty($filesToDelete)) {
+            foreach ( $filesToDelete as $fileToDelete ) {
+                try {
+                    // get the oai_identifier
+                    $databaseSelect = DB::table('filepaths')
+                    ->select('oai_identifier')
+                    ->where('xml_path', $fileToDelete['xml_path'])
+                    ->get();
 
-            $databaseDeleted = \Filepath::where(
-                'xml_path', $fileToDelete['xml_path']
-            )->update([
-                'xml_path' => 'NULL',
-                'state' => 'Removed']
-            );
+                    $databaseDeleted = \Filepath::where(
+                        'xml_path',
+                        $fileToDelete['xml_path']
+                    )->update(
+                        ['xml_path' => 'NULL', 'state' => 'Removed']
+                    );
 
-            /* creation and save of Deletedfiles object */
-            $deleteFile = new \Deletedfiles;
-            $deleteFile->xml_path = $fileToDelete['xml_path'];
-            $deleteFile->oai_identifier = $databaseSelect[0]['oai_identifier'];
-            $deleteFile->save();
+                    /* creation and save of Deletedfiles object */
+                    $deleteFile = new \Deletedfiles;
+                    $deleteFile->xml_path = $fileToDelete['xml_path'];
+                    $deleteFile->oai_identifier = $databaseSelect[0]['oai_identifier'];
+                    $deleteFile->save();
+                } catch ( \Exception $e ) {
+                    App::flash('message', $e->getMessage());
+                    Response::redirect(
+                        $this->siteUrl(
+                            'admin/displayDeleteFiles/' .
+                            $set . '/' . Input::post('format')
+                        )
+                    );
+                }
+            }
         }
         /* set is in removed state to do not display in set list */
         $deleteSet = \Setinfos::where('set_name', $set)
             ->update(['state' => 'Removed']);
+
+        App::flash('message', 'Le set ' . $set . ' ainsi que ses fichiers ont bien été supprimé');
+        Response::redirect(
+            $this->siteUrl('admin/listSet/')
+        );
     }
 
     /**
@@ -289,23 +311,43 @@ Class FilesController extends BaseController
     public function deleteFiles($set)
     {
         $filesToDelete = Input::post('list_files');
-        foreach ( $filesToDelete as $fileToDelete ) {
-            // get the oai_identifier
-            $databaseSelect = DB::table('filepaths')
-            ->select('oai_identifier')
-            ->where('xml_path', $fileToDelete)
-            ->get();
+        if (!empty($filesToDelete)) {
+            foreach ( $filesToDelete as $fileToDelete ) {
+                // get the oai_identifier
+                try {
+                    $databaseSelect = DB::table('filepaths')
+                    ->select('oai_identifier')
+                    ->where('xml_path', $fileToDelete)
+                    ->get();
 
-            // update filepaths table
-            $databaseDeleted = \Filepath::where('xml_path', $fileToDelete)
-                ->update(['xml_path' => 'NULL', 'state' => 'Removed']);
+                    // update filepaths table
+                    $databaseDeleted = \Filepath::where('xml_path', $fileToDelete)
+                        ->update(['xml_path' => 'NULL', 'state' => 'Removed']);
 
-            /* creation and save of Deletedfiles object */
-            $deleteFile                 = new \Deletedfiles;
-            $deleteFile->xml_path       = $fileToDelete;
-            $deleteFile->oai_identifier = $databaseSelect[0]['oai_identifier'];
-            $deleteFile->data_set       = $set;
-            $deleteFile->save();
+                    /* creation and save of Deletedfiles object */
+                    $deleteFile                 = new \Deletedfiles;
+                    $deleteFile->xml_path       = $fileToDelete;
+                    $deleteFile->oai_identifier
+                        = $databaseSelect[0]['oai_identifier'];
+                    $deleteFile->data_set       = $set;
+                    $deleteFile->save();
+                } catch ( \Exception $e ) {
+                    App::flash('message', $e->getMessage());
+                    Response::redirect(
+                        $this->siteUrl(
+                            'admin/displayDeleteFiles/' .
+                            $set . '/' . Input::post('format')
+                        )
+                    );
+                }
+            }
+            App::flash('message', 'Les fichiers ont bien été supprimé');
+            Response::redirect(
+                $this->siteUrl(
+                    'admin/displayDeleteFiles/' .
+                    $set . '/' . Input::post('format')
+                )
+            );
         }
     }
 }

@@ -38,7 +38,6 @@
                                     {% endfor %}
                                 </ul>
                             </div>
- 
                             <a class="btn btn-danger" role="button" href="{{ urlFor('deleteset', {'set': set.set_name })}}">Supprimer ce set</a>
                         </div>
                     </div>
@@ -48,6 +47,7 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
+    {{ flash.message }}
     <!-- /.row -->
 </div>
 <!-- /.container -->
