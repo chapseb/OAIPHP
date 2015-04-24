@@ -204,45 +204,66 @@ Class FilesController extends BaseController
             $listDeletingFiles
         );
 
-        foreach ($filesToReinstate as &$file) {
-            $currentFile = DB::table('deletedfiles')
-            ->select()
-            ->where('xml_path', $file)
-            ->get();
-            if ($setname == $currentFile[0]['data_set']) {
-                \Filepath::where('oai_identifier', $currentFile[0]['oai_identifier'])
-                    ->update([
-                        'xml_path' => $file,
-                        'state' => 'Published']
+        if (!empty($filesToReinstate)) {
+            foreach ($filesToReinstate as &$file) {
+                try {
+                    $currentFile = DB::table('deletedfiles')
+                    ->select()
+                    ->where('xml_path', $file)
+                    ->get();
+                    if ($setname == $currentFile[0]['data_set']) {
+                        \Filepath::where(
+                            'oai_identifier',
+                            $currentFile[0]['oai_identifier']
+                        )->update(
+                            [
+                                'xml_path' => $file,
+                                'state' => 'Published']
+                        );
+                        $rowToDelete = \Deletedfiles::where(
+                            'oai_identifier',
+                            '=',
+                            $currentFile[0]['oai_identifier']
+                        );
+                        $rowToDelete->delete();
+                    } else {
+                        array_push($file, $filesToAdd);
+                    }
+                } catch ( \Exception$e) {
+                    App::flash('message', $e->getMessage());
+                    Response::redirect(
+                        $this->siteUrl(
+                            'admin/displayAddFiles/' .
+                            $set . '/' . Input::post('format')
+                        )
                     );
-                $rowToDelete = \Deletedfiles::where('oai_identifier', '=', $currentFile[0]['oai_identifier']);
-                $rowToDelete->delete();
-            } else {
-                 array_push($file, $filesToAdd);
+                }
             }
         }
 
         // creation of Filepath object to save
-        foreach ( $filesToAdd as &$file ) {
-            $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
-            /*if ($format == 'ead') {
-                $create = $xmlFile->xpath('.//creation/date');
-                $create = (string) $create[1]['normal'];
-            } else*/if ($format == 'ape_ead') {
-                $create = $xmlFile->xpath('eadheader');
-                print_r($create);
+        if (!empty($filesToAdd)) {
+            foreach ( $filesToAdd as &$file ) {
+                $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                if ($format == 'ead' || $format == 'ape_ead') {
+                    $create = $xmlFile->xpath('.//creation/date');
+                    if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                        $create = (string) $create[0]['normal'];
+                    } else {
+                        $create = (string) $create[1]['normal'];
+                    }
+                }
+                $addFile = new \Filepath;
+                $addFile->data_set          = $setname;
+                $addFile->metadata_format   = $format;
+                $addFile->xml_path          = $file;
+                $addFile->oai_identifier    = uniqid();
+                $addFile->creation_date     = $create;
+                $addFile->modification_date = $create;
+                $addFile->state             = 'Published';
+                $addFile->save();
             }
-            $addFile = new \Filepath;
-            $addFile->data_set          = $setname;
-            $addFile->metadata_format   = $format;
-            $addFile->xml_path          = $file;
-            $addFile->oai_identifier    = uniqid();
-            $addFile->creation_date     = $date;
-            $addFile->modification_date = $date;
-            $addFile->state             = 'Published';
-            $addFile->save();
         }
-
     }
 
     /**
