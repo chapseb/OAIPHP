@@ -1,20 +1,43 @@
 <div class="row">
-    <div class="col-lg-12 text-center">
-        <h2 class="page-header">Welcome to SlimStarter {{ organization }} </h2>
+    <div class="panel panel-default">
+  <div class="panel-body">
+    <div class="col-sm-12 text-center">
+        <div class="jumbotron">
+          <h1>Welcome to SlimStarter {{ organization }} </h1>
+          <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+          <p><a class="btn btn-primary btn-lg">Learn more</a></p>
+</div>
+        <div class="col-sm-4">
 
-        <div class="col-lg-4">
-            <h3>Créer un nouveau set</h3>
-            <a href="{{ urlFor('createform') }}">Créer</a>
+            <div class="panel panel-default">
+              <div class="panel-heading"><h5>Créer un nouveau set</h5></div>
+              <div class="panel-body">
+                  <a href="{{ urlFor('createform') }}">Créer</a>
+              </div>
+            </div>
+
+
         </div>
 
-        <div class="col-lg-4">
-            <h3>Afficher les sets existants</h3>
-            <a href="{{ urlFor('listset') }}">Liste des sets existants</a>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+              <div class="panel-heading"><h5>Afficher les sets existants</h5></div>
+              <div class="panel-body">
+                  <a href="{{ urlFor('listset') }}">Liste des sets existants</a>
+              </div>
+            </div>
         </div>
 
-        <div class="col-lg-4">
-            <h3>Paramètres</h3>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+              <div class="panel-heading"><h5>Paramètres</h5></div>
+              <div class="panel-body">
+                  <a href="">Paramètres</a>
+              </div>
+            </div>
         </div>
 
     </div>
+    </div>
+  </div>
 </div>

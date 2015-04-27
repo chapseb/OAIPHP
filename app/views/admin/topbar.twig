@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="margin-bottom: 0">
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
         </button>
 
-        <img src="{{assetUrl}}images/logo.png" alt="xsanisty logo" class="navbar-logo">
+        <img src="{{assetUrl}}images/spider.png" alt="xsanisty logo" class="navbar-logo">
         <a class="navbar-brand hidden-xs" href="{{siteUrl('/')}}">
             Application OAI-PMH
         </a>
@@ -21,21 +21,14 @@
                 Loading <img src="{{assetUrl}}images/loader.gif" alt="">
             </label>
         </li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-user">
-                <li><a href="#"><i class="fa fa-user fa-fw"></i>Votre profil</a>
-                </li>
-                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Paramètres</a>
-                </li>
-                <li class="divider"></li>
-                <li><a href="{{ urlFor('logout') }}"><i class="fa fa-sign-out fa-fw"></i>Déconnexion</a>
-                </li>
-            </ul>
-            <!-- /.dropdown-user -->
-        </li>
+        <li class="dropdown open">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Menu <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Profil</a></li>
+                          <li><a href="#">Paramètre</a></li>
+                          <li><a href="{{ urlFor('logout') }}">Déconnexion</a></li>
+                        </ul>
+                      </li>
         <!-- /.dropdown -->
     </ul>
     <!-- /.navbar-top-links -->

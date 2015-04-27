@@ -1,3 +1,22 @@
+.footer {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 40px;
+  border-top: 1px solid #eee;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  background-color: transparent;
+}
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
+.dropdown-toggle  {
+    color: #781715;
+}
 /** navbar customisation */
 .navbar{
     min-height: 30px
@@ -17,13 +36,13 @@
 }
 
 .navbar-inverse{
-    background: linear-gradient(to bottom, #2C3742 0%, #28303A 100%);
-    border-bottom: 1px solid #191E23;
+    background: linear-gradient(to bottom, #781715 0%, #781715 100%);
+    border-bottom: 1px solid #781715;
     color:#ddd;
 }
 
 img.navbar-logo{
-    height:30px;
+    height:54px;
     margin: 5px 10px;
     float:left;
 }
@@ -71,17 +90,17 @@ img.navbar-logo{
 
 
 .navbar-static-side a{
-    color:#33455A;
+    color:#8d0000;
 }
 
 /** sidebar active */
 .menu_active > a {
     color: #ffffff;
-    background: #33455A;
+    background: #8d0000;
 }
 .nav > li.menu_active > a:focus, .nav > li.menu_active > a:hover {
     color: #ffffff;
-    background: #33455A;
+    background: #8d0000;
 }
 
 
