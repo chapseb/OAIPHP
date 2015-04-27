@@ -120,6 +120,10 @@ Class FilesController extends BaseController
         $dataSet->state    = 'Published';
         $dataSet->id_user  = Sentry::getUser()['id'];
         $dataSet->save();
+        Response::redirect(
+            $this->siteUrl('admin/listSet/')
+        );
+
     }
 
     /**
