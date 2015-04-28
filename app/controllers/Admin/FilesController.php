@@ -15,26 +15,6 @@ use \Response;
 
 Class FilesController extends BaseController
 {
-
-    /**
-     * Get files in a directory
-     *
-     * @param string $path path to the directory
-     */
-    /*public function getFiles()
-    {
-        $user = Sentry::getUser();
-        $path = '/var/www/ead_files/lancelot/';
-        $files['listFiles'] = array();
-        if ($repo = opendir($path)) {
-            while (false !== ($file = readdir($repo))) {
-                array_push($files['listFiles'], $file);
-            }
-            asort($files);
-        }
-        App::render('admin/listFiles.twig', $files);
-    }*/
-
     /**
      * List set for a user
      *
@@ -114,16 +94,29 @@ Class FilesController extends BaseController
      */
     public function addSet()
     {
-        $setname           = Input::post('data_set');
-        $dataSet           = new \Setinfos;
-        $dataSet->set_name = $setname;
-        $dataSet->state    = 'Published';
-        $dataSet->id_user  = Sentry::getUser()['id'];
-        $dataSet->save();
-        Response::redirect(
-            $this->siteUrl('admin/listSet/')
+        $testExist = \Setinfos::where(
+            'set_name',
+            Input::post('data_set')
+        )->where(
+            'id_user',
+            Sentry::getUser()['id']
         );
-
+        if (($testExist->count() == 0)) {
+            $setname           = Input::post('data_set');
+            $dataSet           = new \Setinfos;
+            $dataSet->set_name = $setname;
+            $dataSet->state    = 'Published';
+            $dataSet->id_user  = Sentry::getUser()['id'];
+            $dataSet->save();
+            Response::redirect(
+                $this->siteUrl('admin/listSet/')
+            );
+        } else {
+            App::flash('message', 'Vous possédez déjà un set à ce nom.');
+            Response::redirect(
+                $this->siteUrl('admin/createSet')
+            );
+        }
     }
 
     /**
@@ -238,7 +231,7 @@ Class FilesController extends BaseController
                     } else {
                         array_push($file, $filesToAdd);
                     }
-                } catch ( \Exception$e) {
+                } catch ( \Exception $e) {
                     App::flash('message', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
@@ -273,7 +266,7 @@ Class FilesController extends BaseController
                     } else if ($editFileDB['data_set'] != $setname) {
                         array_push($filesToAdd, $modifyFile);
                     }
-                } catch ( \Exception$e) {
+                } catch ( \Exception $e) {
                     App::flash('message', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
@@ -308,7 +301,7 @@ Class FilesController extends BaseController
                     $addFile->modification_date = $create;
                     $addFile->state             = 'Published';
                     $addFile->save();
-                } catch ( \Exception$e) {
+                } catch ( \Exception $e) {
                     App::flash('message', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
