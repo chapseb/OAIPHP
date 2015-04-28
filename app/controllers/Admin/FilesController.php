@@ -251,51 +251,73 @@ Class FilesController extends BaseController
         }
         if (!empty($listToModifyFiles) ) {
             foreach ( $listToModifyFiles as $modifyFile) {
-                $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
-                if ($format == 'ead' || $format == 'ape_ead') {
-                    $create = $xmlFile->xpath('.//creation/date');
-                    if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
-                        $create = (string) $create[0]['normal'];
-                    } else {
-                        $create = (string) $create[1]['normal'];
+                try {
+                    $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                    if ($format == 'ead' || $format == 'ape_ead') {
+                        $create = $xmlFile->xpath('.//creation/date');
+                        if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                            $create = (string) $create[0]['normal'];
+                        } else {
+                            $create = (string) $create[1]['normal'];
+                        }
                     }
+                    $editFileDB = \Filepath::where(
+                        'xml_path',
+                        $modifyFile
+                    )->first();
+                    if ($editFileDB['modification_date'] < $create
+                        &&  $editFileDB['data_set'] == $setname
+                    ) {
+                        $editFileDB->modification_date = $create;
+                        $editFileDB->save();
+                    } else if ($editFileDB['data_set'] != $setname) {
+                        array_push($filesToAdd, $modifyFile);
+                    }
+                } catch ( \Exception$e) {
+                    App::flash('message', $e->getMessage());
+                    Response::redirect(
+                        $this->siteUrl(
+                            'admin/displayAddFiles/' .
+                            $setname . '/' . Input::post('format')
+                        )
+                    );
                 }
-                $editFileDB = \Filepath::where(
-                    'xml_path',
-                    $modifyFile
-                )->first();
-                if ($editFileDB['modification_date'] < $create
-                    &&  $editFileDB['data_set'] == $setname
-                ) {
-                    $editFileDB->modification_date = $create;
-                    $editFileDB->save();
-                } else if ($editFileDB['data_set'] != $setname) {
-                    array_push($filesToAdd, $modifyFile);
-                }
+
             }
         }
 
         // creation of Filepath object to save
         if (!empty($filesToAdd)) {
             foreach ( $filesToAdd as &$file ) {
-                $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
-                if ($format == 'ead' || $format == 'ape_ead') {
-                    $create = $xmlFile->xpath('.//creation/date');
-                    if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
-                        $create = (string) $create[0]['normal'];
-                    } else {
-                        $create = (string) $create[1]['normal'];
+                try {
+                    $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                    if ($format == 'ead' || $format == 'ape_ead') {
+                        $create = $xmlFile->xpath('.//creation/date');
+                        if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                            $create = (string) $create[0]['normal'];
+                        } else {
+                            $create = (string) $create[1]['normal'];
+                        }
                     }
+                    $addFile = new \Filepath;
+                    $addFile->data_set          = $setname;
+                    $addFile->metadata_format   = $format;
+                    $addFile->xml_path          = $file;
+                    $addFile->oai_identifier    = uniqid();
+                    $addFile->creation_date     = $create;
+                    $addFile->modification_date = $create;
+                    $addFile->state             = 'Published';
+                    $addFile->save();
+                } catch ( \Exception$e) {
+                    App::flash('message', $e->getMessage());
+                    Response::redirect(
+                        $this->siteUrl(
+                            'admin/displayAddFiles/' .
+                            $setname . '/' . Input::post('format')
+                        )
+                    );
                 }
-                $addFile = new \Filepath;
-                $addFile->data_set          = $setname;
-                $addFile->metadata_format   = $format;
-                $addFile->xml_path          = $file;
-                $addFile->oai_identifier    = uniqid();
-                $addFile->creation_date     = $create;
-                $addFile->modification_date = $create;
-                $addFile->state             = 'Published';
-                $addFile->save();
+
             }
         }
     }
