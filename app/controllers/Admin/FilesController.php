@@ -202,6 +202,11 @@ Class FilesController extends BaseController
             $filesToAdd
         );
 
+        $listToModifyFiles = array_intersect(
+            $filesToAdd,
+            $listExistingFiles
+        );
+
         $filesToAdd = array_diff(
             $filesToAdd,
             $listExistingFiles,
@@ -238,9 +243,34 @@ Class FilesController extends BaseController
                     Response::redirect(
                         $this->siteUrl(
                             'admin/displayAddFiles/' .
-                            $set . '/' . Input::post('format')
+                            $setname . '/' . Input::post('format')
                         )
                     );
+                }
+            }
+        }
+        if (!empty($listToModifyFiles) ) {
+            foreach ( $listToModifyFiles as $modifyFile) {
+                $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                if ($format == 'ead' || $format == 'ape_ead') {
+                    $create = $xmlFile->xpath('.//creation/date');
+                    if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                        $create = (string) $create[0]['normal'];
+                    } else {
+                        $create = (string) $create[1]['normal'];
+                    }
+                }
+                $editFileDB = \Filepath::where(
+                    'xml_path',
+                    $modifyFile
+                )->first();
+                if ($editFileDB['modification_date'] < $create
+                    &&  $editFileDB['data_set'] == $setname
+                ) {
+                    $editFileDB->modification_date = $create;
+                    $editFileDB->save();
+                } else if ($editFileDB['data_set'] != $setname) {
+                    array_push($filesToAdd, $modifyFile);
                 }
             }
         }
