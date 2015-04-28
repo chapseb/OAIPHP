@@ -5,9 +5,9 @@
     <div class="row">
         <div class="col-sm-12 text-center">
             <h3 class="page-header">Liste des fichiers dans notre dossier</h3>
-            <ul>
+            <ul class="list-group">
             {% for file in listFiles %}
-                <li> {{ file.xml_path }} - {{ file.state }}</li>
+                <li class="list-group-item"> {{ file.xml_path }} - {{ file.state }}</li>
             {% endfor %}
             </ul>
         </div>
