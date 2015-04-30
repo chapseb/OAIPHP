@@ -7,7 +7,7 @@
             {% for set in listsets %}
                 <li class="list-group-item">
                     <div class="row">
-                    <div class="col-sm-3">{{ set.set_name }}</div>
+                    <div class="col-sm-3"><h5>{{ set.set_name }}</h5></div>
                        <div class="col-sm-9">
                             <a class="btn btn-default" role="button" href="{{ urlFor('listmetadataformat', {'set': set.set_name} )}}">Liste des formats présents</a>
                             <div class="btn-group" role="group">
