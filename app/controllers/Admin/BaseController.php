@@ -19,13 +19,19 @@ class BaseController extends \BaseController
             'icon'  => 'dashboard',
             'url'   => 'admin'
         ));
+        $logout = $adminMenu->createItem('Logout', array(
+            'label' => 'Logout',
+            'icon'  => 'power-off',
+            'url'   => 'logout'
+        ));
 
         $adminMenu->addItem('dashboard', $dashboard);
+
         $adminMenu->setActiveMenu('dashboard');
 
         foreach (Module::getModules() as $module) {
             $module->registerAdminMenu();
         }
-
+        $adminMenu->addItem('logout', $logout);
     }
 }
