@@ -20,12 +20,12 @@ class Initialize extends \SlimStarter\Module\Initializer{
 
         $adminMenu = Menu::get('admin_sidebar');
 
-        $userGroup = $adminMenu->createItem('usergroup', array(
+        /*$userGroup = $adminMenu->createItem('usergroup', array(
             'label' => 'User and Group',
             'icon'  => 'group',
             'url'   => '#'
-        ));
-        $userGroup->setAttribute('class', 'nav nav-second-level');
+        ));*/
+        //$userGroup->setAttribute('class', 'nav nav-second-level');
 
         $userMenu = $adminMenu->createItem('user', array(
             'label' => 'User',
@@ -33,16 +33,16 @@ class Initialize extends \SlimStarter\Module\Initializer{
             'url'   => 'admin/user'
         ));
 
-        $groupMenu = $adminMenu->createItem('group', array(
+        /*$groupMenu = $adminMenu->createItem('group', array(
             'label' => 'Group',
             'icon'  => 'group',
             'url'   => 'admin/group'
-        ));
+        ));*/
 
-        $userGroup->addChildren($userMenu);
-        $userGroup->addChildren($groupMenu);
+        //$userGroup->addChildren($userMenu);
+        //$userGroup->addChildren($groupMenu);
 
-        $adminMenu->addItem('usergroup', $userGroup);
+        $adminMenu->addItem('usergroup', $userMenu);
     }
 
     public function registerAdminRoute(){
