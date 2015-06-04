@@ -1,6 +1,5 @@
 <?php
 
-use \Sentry;
 
 Class HomeController extends BaseController
 {
