@@ -32,9 +32,13 @@ class UserController extends BaseController
     {
         $user = Sentry::getUser();
         $this->data['title'] = 'Users List';
-        $this->data['users'] = User::where('id', '<>', $user->id)
-                               ->get()
-                               ->toArray();
+        $this->data['users'][0] = $user;
+
+        if ($user->hasAccess('admin')) {
+            $this->data['permission'] = 'admin';
+            $this->data['users'] = User::where('id', '<>', $user->id)
+                ->get()->toArray();
+        }
 
         /** load the user.js app */
         $this->loadJs('app/user.js');
