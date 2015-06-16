@@ -33,8 +33,12 @@
                                     <span class="sr-only"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    {% for format in listformats%}
-                                        <li><a href="{{ urlFor('displaydeletefiles',{ 'set': set.set_name, 'format': format.name })}}">{{ format.name }}</a></li>
+                                    {% for format in existingtype %}
+                                        {% for tests in format %}
+                                            {%for test in tests  %}
+                                                <li><a href="{{ urlFor('displaydeletefiles',{ 'set': set.set_name, 'format': test })}}">{{ test }}</a></li>
+                                            {% endfor %}
+                                        {% endfor %}
                                     {% endfor %}
                                 </ul>
                             </div>

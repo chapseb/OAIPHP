@@ -27,12 +27,36 @@ Class FilesController extends BaseController
             = DB::table('set_infos')
             ->select('set_name')
             ->where('id_user', $user['id'])
-             ->where('state', 'Published')
+            ->where('state', 'Published')
             ->get();
-         $this->data['listformats']
-             = DB::table('set_types')
-             ->select('name')
-             ->get();
+        $listFormatBySet = array();
+        foreach ($this->data['listsets'] as $set) {
+                $formatsSet = DB::table('filepaths')
+                ->leftjoin(
+                    'set_infos AS sinfos',
+                    'filepaths.data_set',
+                    '=',
+                    'sinfos.set_name'
+                )
+                ->where('filepaths.data_set', $set)
+                ->where('sinfos.id_user', '=', Sentry::getUser()['id'])
+                ->distinct()
+                ->select('metadata_format')
+                ->get();
+                array_push($listFormatBySet, $formatsSet);
+        }
+        $this->data['existingtype'] = $listFormatBySet;
+        $this->data['listformats']
+            = DB::table('set_types')
+            ->select('name')
+            ->get();
+        foreach ($this->data['listformats'] as $key => $format) {
+            $organization = Sentry::getUser()['organization'];
+            $path = App::config('pathfile') . $organization . "/" . $format['name'];
+            if (!file_exists($path)) {
+                unset($this->data['listformats'][$key]);
+            }
+        }
         $this->data['template'] = 'admin/listsets.twig';
         App::render('admin/index.twig', $this->data);
     }
@@ -70,6 +94,7 @@ Class FilesController extends BaseController
         $this->data['listFiles'] = DB::table('filepaths')
             ->select('xml_path', 'state')
             ->where('data_set', $nameSet)
+            ->where('xml_path', '!=', 'NULL')
             ->where('metadata_format', $metadataformat)
             ->get();
         $this->data['template'] = 'admin/listfiles.twig';
