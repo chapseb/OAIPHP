@@ -8,10 +8,13 @@
             <form role="form" class="form-horizontal" action="{{urlFor('deletesetfiles', {'set':  setname })}}" method="POST">
                 <div class="form-group">
                     <div class="col-lg-6">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="checkAll" class="check" value="Tout cocher">Tout cocher</label>
+                        </div>
                         {% for file in files %}
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="list_files[]" value="{{ file.xml_path }}">
+                                <input type="checkbox" name="list_files[]" class="check" value="{{ file.xml_path }}">
                                 {{ file.xml_path }}
                             </label>
                         </div>

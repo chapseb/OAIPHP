@@ -8,10 +8,13 @@
             <form role="form" class="form-horizontal" action="{{urlFor('addfiles')}}" method="POST">
                 <div class="form-group">
                     <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="checkAll" class="check" value="Tout cocher">Tout cocher</label>
+                        </div>
                         {% for file in files %}
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="list_files[]" value="{{ file }}">
+                                <input type="checkbox" class="check" name="list_files[]" value="{{ file }}">
                                 {{ file }}
                             </label>
                         </div>
