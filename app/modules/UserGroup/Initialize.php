@@ -28,7 +28,7 @@ class Initialize extends \SlimStarter\Module\Initializer{
         //$userGroup->setAttribute('class', 'nav nav-second-level');
 
         $userMenu = $adminMenu->createItem('user', array(
-            'label' => 'User',
+            'label' => 'Utilisateur',
             'icon'  => 'user',
             'url'   => 'admin/user'
         ));

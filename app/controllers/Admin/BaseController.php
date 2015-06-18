@@ -15,12 +15,12 @@ class BaseController extends \BaseController
 
         $adminMenu = Menu::create('admin_sidebar');
         $dashboard = $adminMenu->createItem('dashboard', array(
-            'label' => 'Dashboard',
+            'label' => 'Tableau de bord',
             'icon'  => 'dashboard',
             'url'   => 'admin'
         ));
         $logout = $adminMenu->createItem('Logout', array(
-            'label' => 'Logout',
+            'label' => 'Deconnexion',
             'icon'  => 'power-off',
             'url'   => 'logout'
         ));

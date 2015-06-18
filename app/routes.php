@@ -62,7 +62,7 @@ Route::get('/logout', 'Admin\AdminController:logout')->name('logout');
 Route::post('/login', 'Admin\AdminController:doLogin');
 
 /** Route to documentation */
-Route::get('/doc(/:page+)', 'DocController:index');
+Route::get('/doc(/:page+)', 'DocController:index')->name('documentation');
 
 
 foreach (Module::getModules() as $module) {
