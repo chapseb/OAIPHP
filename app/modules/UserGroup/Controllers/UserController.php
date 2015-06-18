@@ -31,7 +31,7 @@ class UserController extends BaseController
     public function index($page = 1)
     {
         $user = Sentry::getUser();
-        $this->data['title'] = 'Users List';
+        $this->data['title'] = 'Liste des utilisateurs';
         $this->data['users'][0] = $user;
 
         if ($user->hasAccess('admin')) {
@@ -117,7 +117,7 @@ class UserController extends BaseController
             $input = is_null($input) ? Input::post() : $input;
 
             if($input['password'] != $input['confirm_password']){
-                throw new Exception("Password and confirmation password not match", 1);
+                throw new Exception("Le mot de passe et la confirmation ne correspondent pas", 1);
             }
 
             $user = Sentry::findUserById($id);
@@ -170,7 +170,7 @@ class UserController extends BaseController
             $input = Input::post();
 
             if($input['password'] != $input['confirm_password']){
-                throw new Exception("Password and confirmation password not match", 1);
+                throw new Exception("Le mot de passe et la confirmation ne correspondent pas", 1);
             }
 
             $user = Sentry::createUser(array(
@@ -194,7 +194,7 @@ class UserController extends BaseController
             }
 
             $success = true;
-            $message = 'User created successfully';
+            $message = 'Utilisateur crée avec succès';
         }catch (Exception $e){
             $message = $e->getMessage();
         }
