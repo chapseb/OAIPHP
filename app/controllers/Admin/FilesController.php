@@ -45,7 +45,10 @@ Class FilesController extends BaseController
                 ->get();
                 array_push($listFormatBySet, $formatsSet);
         }
-        $this->data['existingtype'] = $listFormatBySet;
+        $this->data['existingtype'] = array_map(
+            "unserialize",
+            array_unique(array_map("serialize", $listFormatBySet))
+        );
         $this->data['listformats']
             = DB::table('set_types')
             ->select('name')
