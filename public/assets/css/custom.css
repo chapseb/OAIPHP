@@ -127,6 +127,14 @@ img.navbar-logo{
      border-bottom-right-radius: 5px;
 }
 
+.error {
+    color: red;
+}
+
+.message {
+    color: green;
+}
+
 @media(min-width:768px) {
     .navbar-static-side {
         z-index: 1;

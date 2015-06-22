@@ -25,7 +25,16 @@
                 <input type="hidden" name="setname" value="{{ setname }}">
                 <input type="submit"/>
             </form>
-            {{ flash.message }}
+            {% if flash.message is defined %}
+            <div class= "message">
+                {{ flash.message }}
+            </div>
+            {% endif %}
+            {% if flash.error is defined %}
+            <div class="error">
+                {{ flash.error }}
+            </div>
+            {% endif %}
         </div>
         <!-- /.col-lg-12 -->
     </div>

@@ -260,7 +260,7 @@ Class FilesController extends BaseController
                         array_push($file, $filesToAdd);
                     }
                 } catch ( \Exception $e) {
-                    App::flash('message', $e->getMessage());
+                    App::flash('error', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
                             'admin/displayAddFiles/' .
@@ -295,7 +295,7 @@ Class FilesController extends BaseController
                         array_push($filesToAdd, $modifyFile);
                     }
                 } catch ( \Exception $e) {
-                    App::flash('message', $e->getMessage());
+                    App::flash('error', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
                             'admin/displayAddFiles/' .
@@ -330,7 +330,7 @@ Class FilesController extends BaseController
                     $addFile->state             = 'Published';
                     $addFile->save();
                 } catch ( \Exception $e) {
-                    App::flash('message', $e->getMessage());
+                    App::flash('error', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
                             'admin/displayAddFiles/' .
@@ -379,7 +379,7 @@ Class FilesController extends BaseController
                     $deleteFile->oai_identifier = $databaseSelect[0]['oai_identifier'];
                     $deleteFile->save();
                 } catch ( \Exception $e ) {
-                    App::flash('message', $e->getMessage());
+                    App::flash('error', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
                             'admin/displayDeleteFiles/' .
@@ -393,7 +393,10 @@ Class FilesController extends BaseController
         $deleteSet = \Setinfos::where('set_name', $set)
             ->update(['state' => 'Removed']);
 
-        App::flash('message', 'Le set ' . $set . ' ainsi que ses fichiers ont bien été supprimé');
+        App::flash(
+            'message',
+            'Le set ' . $set . ' ainsi que ses fichiers ont bien été supprimés'
+        );
         Response::redirect(
             $this->siteUrl('admin/listSet/')
         );
@@ -430,7 +433,7 @@ Class FilesController extends BaseController
                     $deleteFile->data_set       = $set;
                     $deleteFile->save();
                 } catch ( \Exception $e ) {
-                    App::flash('message', $e->getMessage());
+                    App::flash('error', $e->getMessage());
                     Response::redirect(
                         $this->siteUrl(
                             'admin/displayDeleteFiles/' .

@@ -51,7 +51,16 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
-    {{ flash.message }}
+    {% if flash.message is defined %}
+    <div class= "message">
+        {{ flash.message }}
+    </div>
+    {% endif %}
+    {% if flash.error is defined %}
+    <div class="error">
+        {{ flash.error }}
+    </div>
+    {% endif %}
     <!-- /.row -->
 </div>
 <!-- /.container -->
