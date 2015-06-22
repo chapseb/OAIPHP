@@ -3,11 +3,19 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-sm-12 text-center">
+        <div class="col-sm-10">
             <h3 class="page-header">Liste des fichiers dans notre dossier</h3>
             <ul class="list-group">
             {% for file in listFiles %}
-                <li class="list-group-item"> {{ file.xml_path }} - {{ file.state }}</li>
+            {% set title = file.xml_path|split('/')|last %}
+                <li class="list-group-item">
+                    <div class="row colonne show-grid">
+                        <div class="col-sm-8"><span class="label label-primary">{{ title }}</span></div>
+                        <div class="col-sm-4"><span class="label label-success">{{ file.state }}</span></div>
+                        <div class="col-sm-4"><span class="label label-info">{{ file.metadata_format }}</span></div>
+                        <div class="col-sm-4"><span class="label label-default">{{ file.xml_path }}</span></div>
+                    </div>
+                </li>
             {% endfor %}
             </ul>
         </div>
