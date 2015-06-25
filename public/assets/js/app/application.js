@@ -34,6 +34,11 @@ $(function() {
         });
         if( listFiles.indexOf("Tout cocher") != -1 ) {
             $("#deleteFilesConfirm").html("Vous avez selectionné tous les élements");
+            $("#confirmButton").removeAttr("disabled");
+        }
+        else if (listFiles.length < 1 ){
+            $("#deleteFilesConfirm").html("Vous n'avez selectionné aucun fichier");
+            $("#confirmButton").attr("disabled", "disabled");
         }
         else {
             var newHTML = [];
@@ -41,6 +46,7 @@ $(function() {
                     newHTML.push('<span>' + value + '</span>');
             });
             $("#deleteFilesConfirm").html("Vous avez sélectionné les fichiers suivants :<br />" + newHTML.join("<br />"));
+            $("#confirmButton").removeAttr("disabled");
         }
         $('#myInput').focus();
     });
