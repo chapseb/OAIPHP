@@ -80,7 +80,7 @@ class AdminController extends BaseController
     {
         Sentry::logout();
 
-        Response::redirect($this->siteUrl('login'));
+        Response::redirect($this->siteUrl(''));
     }
 
 }
