@@ -95,12 +95,13 @@ Class FilesController extends BaseController
     public function listFiles($nameSet, $metadataformat)
     {
         $this->data['listFiles'] = DB::table('filepaths')
-            ->select('xml_path', 'state')
+            ->select('xml_path', 'state', 'metadata_format')
             ->where('data_set', $nameSet)
             ->where('xml_path', '!=', 'NULL')
             ->where('metadata_format', $metadataformat)
             ->get();
         $this->data['template'] = 'admin/listfiles.twig';
+        $this->data['set'] = $nameSet;
         App::render('admin/index.twig', $this->data);
     }
 
@@ -140,7 +141,7 @@ Class FilesController extends BaseController
                 $this->siteUrl('admin/listSet/')
             );
         } else {
-            App::flash('message', 'Vous possédez déjà un set à ce nom.');
+            App::flash('error', 'Vous possédez déjà un set à ce nom.');
             Response::redirect(
                 $this->siteUrl('admin/createSet')
             );
@@ -204,7 +205,7 @@ Class FilesController extends BaseController
      */
     public function addFiles()
     {
-        $listExistingFiles = DB::table('filepaths')
+        $listExistingFiles = DB::table('filepaths')->where('xml_path', '!=', 'NULL')
                             ->lists('xml_path');
         // get form value
         $format         = Input::post('format');
@@ -212,135 +213,144 @@ Class FilesController extends BaseController
         $filesToAdd     = Input::post('list_files');
         $setname        = Input::post('setname');
         $date           = date('Y-m-d H:i:s');
-        foreach ( $filesToAdd as &$file) {
-            $file = "/" . $organization . "/" . $format . "/" . $file;
-        }
-        $listDeletingFiles = DB::table('deletedfiles')
-            ->lists('xml_path');
-
-        $filesToReinstate = array_intersect(
-            $listDeletingFiles,
-            $filesToAdd
-        );
-
-        $listToModifyFiles = array_intersect(
-            $filesToAdd,
-            $listExistingFiles
-        );
-
-        $filesToAdd = array_diff(
-            $filesToAdd,
-            $listExistingFiles,
-            $listDeletingFiles
-        );
-
-        if (!empty($filesToReinstate)) {
-            foreach ($filesToReinstate as &$file) {
-                try {
-                    $currentFile = DB::table('deletedfiles')
-                    ->select()
-                    ->where('xml_path', $file)
-                    ->get();
-                    if ($setname == $currentFile[0]['data_set']) {
-                        \Filepath::where(
-                            'oai_identifier',
-                            $currentFile[0]['oai_identifier']
-                        )->update(
-                            [
-                                'xml_path' => $file,
-                                'state' => 'Published']
-                        );
-                        $rowToDelete = \Deletedfiles::where(
-                            'oai_identifier',
-                            '=',
-                            $currentFile[0]['oai_identifier']
-                        );
-                        $rowToDelete->delete();
-                    } else {
-                        array_push($file, $filesToAdd);
-                    }
-                } catch ( \Exception $e) {
-                    App::flash('error', $e->getMessage());
-                    Response::redirect(
-                        $this->siteUrl(
-                            'admin/displayAddFiles/' .
-                            $setname . '/' . Input::post('format')
-                        )
-                    );
-                }
-            }
-        }
-        if (!empty($listToModifyFiles) ) {
-            foreach ( $listToModifyFiles as $modifyFile) {
-                try {
-                    $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
-                    if ($format == 'ead' || $format == 'ape_ead') {
-                        $create = $xmlFile->xpath('.//creation/date');
-                        if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
-                            $create = (string) $create[0]['normal'];
-                        } else {
-                            $create = (string) $create[1]['normal'];
-                        }
-                    }
-                    $editFileDB = \Filepath::where(
-                        'xml_path',
-                        $modifyFile
-                    )->first();
-                    if ($editFileDB['modification_date'] < $create
-                        &&  $editFileDB['data_set'] == $setname
-                    ) {
-                        $editFileDB->modification_date = $create;
-                        $editFileDB->save();
-                    } else if ($editFileDB['data_set'] != $setname) {
-                        array_push($filesToAdd, $modifyFile);
-                    }
-                } catch ( \Exception $e) {
-                    App::flash('error', $e->getMessage());
-                    Response::redirect(
-                        $this->siteUrl(
-                            'admin/displayAddFiles/' .
-                            $setname . '/' . Input::post('format')
-                        )
-                    );
-                }
-
-            }
-        }
-
-        // creation of Filepath object to save
         if (!empty($filesToAdd)) {
-            foreach ( $filesToAdd as &$file ) {
-                try {
-                    $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
-                    if ($format == 'ead' || $format == 'ape_ead') {
-                        $create = $xmlFile->xpath('.//creation/date');
-                        if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
-                            $create = (string) $create[0]['normal'];
-                        } else {
-                            $create = (string) $create[1]['normal'];
-                        }
-                    }
-                    $addFile = new \Filepath;
-                    $addFile->data_set          = $setname;
-                    $addFile->metadata_format   = $format;
-                    $addFile->xml_path          = $file;
-                    $addFile->oai_identifier    = uniqid();
-                    $addFile->creation_date     = $create;
-                    $addFile->modification_date = $create;
-                    $addFile->state             = 'Published';
-                    $addFile->save();
-                } catch ( \Exception $e) {
-                    App::flash('error', $e->getMessage());
-                    Response::redirect(
-                        $this->siteUrl(
-                            'admin/displayAddFiles/' .
-                            $setname . '/' . Input::post('format')
-                        )
-                    );
-                }
-
+            foreach ( $filesToAdd as &$file) {
+                $file = "/" . $organization . "/" . $format . "/" . $file;
             }
+            $listDeletingFiles = DB::table('deletedfiles')
+                ->lists('xml_path');
+
+            $filesToReinstate = array_intersect(
+                $listDeletingFiles,
+                $filesToAdd
+            );
+            $listToModifyFiles = array_intersect(
+                $filesToAdd,
+                $listExistingFiles
+            );
+            $filesToAdd = array_diff(
+                $filesToAdd,
+                $listExistingFiles,
+                $listDeletingFiles
+            );
+            if (!empty($filesToReinstate)) {
+                foreach ($filesToReinstate as &$file) {
+                    try {
+                        $currentFile = DB::table('deletedfiles')
+                        ->select()
+                        ->where('xml_path', $file)
+                        ->get();
+                        if ($setname == $currentFile[0]['data_set']) {
+                            \Filepath::where(
+                                'oai_identifier',
+                                $currentFile[0]['oai_identifier']
+                            )->update(
+                                [
+                                    'xml_path' => $file,
+                                    'state' => 'Published']
+                            );
+                            $rowToDelete = \Deletedfiles::where(
+                                'oai_identifier',
+                                '=',
+                                $currentFile[0]['oai_identifier']
+                            );
+                            $rowToDelete->delete();
+                        } else {
+                            array_push($filesToAdd, $file);
+                        }
+                    } catch ( \Exception $e) {
+                        App::flash('error', $e->getMessage());
+                        Response::redirect(
+                            $this->siteUrl(
+                                'admin/displayAddFiles/' .
+                                $setname . '/' . Input::post('format')
+                            )
+                        );
+                    }
+                }
+            }
+            if (!empty($listToModifyFiles) ) {
+                foreach ( $listToModifyFiles as $modifyFile) {
+                    try {
+                        $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                        if ($format == 'ead' || $format == 'ape_ead') {
+                            $create = $xmlFile->xpath('.//creation/date');
+                            if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                                $create = (string) $create[0]['normal'];
+                            } else {
+                                $create = (string) $create[1]['normal'];
+                            }
+                        }
+                        $editFileDB = \Filepath::where(
+                            'xml_path',
+                            $modifyFile
+                        )->first();
+                        if ($editFileDB['modification_date'] < $create
+                            &&  $editFileDB['data_set'] == $setname
+                        ) {
+                            $editFileDB->modification_date = $create;
+                            $editFileDB->save();
+                        } else if ($editFileDB['data_set'] != $setname) {
+                            array_push($filesToAdd, $modifyFile);
+                        }
+                    } catch ( \Exception $e) {
+                        App::flash('error', $e->getMessage());
+                        Response::redirect(
+                            $this->siteUrl(
+                                'admin/displayAddFiles/' .
+                                $setname . '/' . Input::post('format')
+                            )
+                        );
+                    }
+
+                }
+            }
+
+            // creation of Filepath object to save
+            if (!empty($filesToAdd)) {
+                foreach ( $filesToAdd as &$file ) {
+                    try {
+                        $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                        if ($format == 'ead' || $format == 'ape_ead') {
+                            $create = $xmlFile->xpath('.//creation/date');
+                            if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                                $create = (string) $create[0]['normal'];
+                            } else {
+                                $create = (string) $create[1]['normal'];
+                            }
+                        }
+                        $addFile = new \Filepath;
+                        $addFile->data_set          = $setname;
+                        $addFile->metadata_format   = $format;
+                        $addFile->xml_path          = $file;
+                        $addFile->oai_identifier    = uniqid();
+                        $addFile->creation_date     = $create;
+                        $addFile->modification_date = $create;
+                        $addFile->state             = 'Published';
+                        $addFile->save();
+                    } catch ( \Exception $e) {
+                        App::flash('error', $e->getMessage());
+                        Response::redirect(
+                            $this->siteUrl(
+                                'admin/displayAddFiles/' .
+                                $setname . '/' . Input::post('format')
+                            )
+                        );
+                    }
+
+                }
+            }
+            App::flash('message', 'Les fichiers ont bien été ajoutés.');
+        } else {
+            App::flash('message', 'vous n\'avez pas selectionné de fichiers.');
         }
+        Response::redirect(
+            $this->siteUrl(
+                'admin/displayAddFiles/' .
+                $setname . '/' . $format
+            )
+        );
+
     }
 
     /**
@@ -376,7 +386,8 @@ Class FilesController extends BaseController
                     /* creation and save of Deletedfiles object */
                     $deleteFile = new \Deletedfiles;
                     $deleteFile->xml_path = $fileToDelete['xml_path'];
-                    $deleteFile->oai_identifier = $databaseSelect[0]['oai_identifier'];
+                    $deleteFile->oai_identifier
+                        = $databaseSelect[0]['oai_identifier'];
                     $deleteFile->save();
                 } catch ( \Exception $e ) {
                     App::flash('error', $e->getMessage());
@@ -449,6 +460,7 @@ Class FilesController extends BaseController
                     $set . '/' . Input::post('format')
                 )
             );
+
         }
     }
 }
