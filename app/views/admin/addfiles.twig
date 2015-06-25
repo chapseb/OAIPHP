@@ -5,6 +5,19 @@
     <div class="row">
         <div class="col-sm-12 text-center">
             <h3 class="page-header">Ajout de fichiers {{ format }} dans le set {{ setname }}</h3>
+            {% if flash.error is defined or flash.message is defined %}
+                {% if flash.message is defined %}
+                <div class= "message">
+                    {{ flash.message }}
+                </div>
+                {% endif %}
+                {% if flash.error is defined %}
+                <div class="error">
+                    {{ flash.error }}
+                </div>
+                {% endif %}
+                <a href="{{ urlFor('listfile', {'set': setname, 'metadataformat': format}) }}" role="button" class="btn btn-primary">Voir la liste des fichiers</a>
+            {% else %}
             <form role="form" class="form-horizontal" action="{{urlFor('addfiles')}}" method="POST">
                 <div class="form-group">
                     <div class="col-lg-4">
@@ -23,8 +36,26 @@
                 </div>
                 <input type="hidden" name="format" value="{{ format }}">
                 <input type="hidden" name="setname" value="{{ setname }}">
-                <input type="submit"/>
+                <button type="button" data-toggle="modal" data-target="#myModal" class=" btn btn-success">Envoyer</button>
+
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times</span></button>
+                            <h4>Confirmation de l'ajout</h4>
+                        </div>
+                        <div class="modal-body" id="listFilesConfirm">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                            <input type="submit" class="btn btn-success" id="confirmButton"/>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </form>
+            {% endif %}
         </div>
         <!-- /.col-lg-12 -->
     </div>

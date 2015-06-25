@@ -42,7 +42,24 @@
                                     {% endfor %}
                                 </ul>
                             </div>
-                            <a class="btn btn-danger" role="button" href="{{ urlFor('deleteset', {'set': set.set_name })}}">Supprimer ce set</a>
+                            <button type="button" data-toggle="modal" data-target="#myModalDeleteSet{{ loop.index }}" class="btn btn-danger">Supprimer ce set</button>
+                            <div class="modal fade" id="myModalDeleteSet{{ loop.index}}" tabindex="-1" role="dialog" aria-labelledby="myModalDeleteSetLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times</span></button>
+                                        <h4>Confirmation de la suppression</h4>
+                                    </div>
+                                    <div class="modal-body" id="">
+                                        Êtes vous sur de vouloir supprimer le set {{ set.set_name }} et ses fichiers ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                        <a class="btn btn-success" role="button" href="{{ urlFor('deleteset', {'set': set.set_name })}}">Supprimer ce set</a>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
                         </div>
                     </div>
                 </li>

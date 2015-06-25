@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-10">
-            <h3 class="page-header">Liste des fichiers dans notre dossier</h3>
+            <h3 class="page-header">Liste des fichiers dans le set {{ set }}</h3>
             <ul class="list-group">
             {% for file in listFiles %}
             {% set title = file.xml_path|split('/')|last %}
