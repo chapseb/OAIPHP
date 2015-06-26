@@ -71,3 +71,5 @@ foreach (Module::getModules() as $module) {
 
 /** default routing */
 Route::get('/', 'HomeController:welcome');
+Route::get('/register', 'HomeController:register')->name('formRegister');
+Route::post('/inscription', 'HomeController:doRegister')->name('doRegister');
