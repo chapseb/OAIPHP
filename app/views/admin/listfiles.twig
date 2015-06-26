@@ -4,13 +4,14 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-8">
+<div class="answer"></div>
         <a role="button" class="btn btn-primary" href="{{ urlFor('listset') }}">Retour vers la liste des sets</a>
         <a role="button" class="btn btn-primary" href="{{ urlFor('listmetadataformat',{"set": set}) }}">Retour vers la liste des formats</a>
             <div class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Liste des fichiers dans le set {{ set }}</th>
+                        <th>Liste des fichiers dans le set <span id="nameset">{{ set }}</span></th>
                         <th>
                             statut
                         </th>

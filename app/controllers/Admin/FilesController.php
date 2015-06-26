@@ -463,4 +463,41 @@ Class FilesController extends BaseController
 
         }
     }
+
+    /**
+     * Delete file in a set by Id
+     *
+     * @param string $set Set which we delete file
+     *
+     * @return void
+     */
+    public function deleteFileById($set)
+    {
+        $id = Input::post('id');
+        if (!empty($id)) {
+            try {
+                $databaseSelect = DB::table('filepaths')
+                ->select('*')
+                ->where('id', $id)
+                ->get();
+                $xml_path = $databaseSelect[0]['xml_path'];
+                // update filepaths table
+                $databaseDeleted = \Filepath::where('id', $id)
+                    ->update(['xml_path' => 'NULL', 'state' => 'Removed']);
+                /* creation and save of Deletedfiles object */
+                $deleteFile                 = new \Deletedfiles();
+                $deleteFile->xml_path       = $xml_path;
+                $deleteFile->oai_identifier
+                    = $databaseSelect[0]['oai_identifier'];
+                $deleteFile->data_set       = $set;
+                $deleteFile->save();
+            } catch ( \Exception $e ) {
+                echo json_encode('error supression sql');
+            }
+            echo json_encode(true);
+        } else {
+            echo json_encode('0');
+        }
+    }
+
 }

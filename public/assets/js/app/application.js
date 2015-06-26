@@ -50,14 +50,32 @@ $(function() {
         }
         $('#myInput').focus();
     });
-            $('button.btnDelete').on('click', function (e) {
-                e.preventDefault();
+            $('.btnDelete').on('click', function (e) {
+                //e.preventDefault();
                 var id = $(this).closest('tr').data('id');
                 $('#myremoveModal').data('id', id);
             });
-            $('#btnDelteYes').click(function () {
+            $('#btnDelteYes').unbind('click').bind('click', function () {
+                var nameset = $('#nameset ').text();
                 var id = $('#myremoveModal').data('id');
+                $.ajax({
+                type: "POST",
+                data: {id: id},
+                url: "/admin/deleteFileById/"+nameset,
+                success: function(msg)
+                {
+                    var message= '';
+                    if (msg == "true"){
+                        message='<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Le fichier a bien été supprimé !</div>';
+                    $('.answer').html(message);
+                    }else{
+                        message='<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Erreur lors de la suppression du fichier :( </div>';
+                        $('.answer').html(message);
+                    }
+                }
+                });
                 $('[data-id=' + id + ']').remove();
             });
 
 });
+
