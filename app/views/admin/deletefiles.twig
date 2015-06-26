@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12 text-center">
+            <p class="text-left"><a role="button" class="btn btn-primary" href="{{ urlFor('listset') }}">Retour vers la liste des sets</a></p>
             <h3 class="page-header">Suppression de fichiers {{ format }} dans le set {{ setname }}</h3>
             {% if flash.error is defined or flash.message is defined %}
                 {% if flash.message is defined %}
