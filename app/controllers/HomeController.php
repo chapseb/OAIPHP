@@ -6,6 +6,7 @@ Class HomeController extends BaseController
 
     public function welcome()
     {
+        $this->data['title'] ='OAI | Accueil';
         if ( ! Sentry::check() ){
             $this->data['title'] = "Bienvenue dans l'application OAI d'Anaphore";
             App::render('welcome.twig', $this->data);
@@ -21,6 +22,7 @@ Class HomeController extends BaseController
      **/
     public function register()
     {
+        $this->data['title'] ='OAI | Inscription';
         $this->data['template'] = 'home/form.twig';
         App::render('welcome.twig', $this->data);
     }

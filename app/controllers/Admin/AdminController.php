@@ -16,6 +16,7 @@ class AdminController extends BaseController
      */
     public function index()
     {
+        $this->data['title'] ='OAI | Tableau de bord';
         if ( Sentry::check() ) {
             $user = Sentry::getUser();
             $this->data['organization'] = $user['organization'];
@@ -29,6 +30,7 @@ class AdminController extends BaseController
      */
     public function login()
     {
+        $this->data['title'] ='OAI | Connexion';
         if(Sentry::check()){
             Response::redirect($this->siteUrl('admin'));
         }else{

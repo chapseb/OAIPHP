@@ -22,6 +22,7 @@ Class FilesController extends BaseController
      */
     public function listSetByUser()
     {
+        $this->data['title'] ='OAI | Liste des Sets';
         $user = Sentry::getUser();
         $this->data['listsets']
             = DB::table('set_infos')
@@ -73,6 +74,7 @@ Class FilesController extends BaseController
      */
     public function listMetadataformat($nameSet)
     {
+        $this->data['title'] ='OAI | Choisir un format';
         $this->data['listformats']
             = DB::table('filepaths')
             ->distinct()
@@ -94,6 +96,7 @@ Class FilesController extends BaseController
      */
     public function listFiles($nameSet, $metadataformat)
     {
+        $this->data['title'] ='OAI | Liste des fichiers';
         $this->data['listFiles'] = DB::table('filepaths')
             ->select('id', 'xml_path', 'state', 'metadata_format')
             ->where('data_set', $nameSet)
@@ -112,6 +115,7 @@ Class FilesController extends BaseController
      */
     public function createForm()
     {
+        $this->data['title'] ='OAI | Creation d\'un set';
         $this->data['template'] = 'admin/createset.twig';
         App::render('admin/index.twig', $this->data);
     }
@@ -158,6 +162,7 @@ Class FilesController extends BaseController
      */
     public function displayAddFiles($setname, $format)
     {
+        $this->data['title'] ='OAI | Sélectionner vos fichiers';
         $organization = Sentry::getUser()['organization'];
         $path = App::config('pathfile') . $organization . "/" . $format;
         $oaiDirectory = opendir($path) or die('Erreur');
@@ -186,6 +191,7 @@ Class FilesController extends BaseController
      */
     public function displayDeleteFiles($setname, $format)
     {
+        $this->data['title'] ='OAI | Supprimer des fichiers';
         $this->data['files'] = DB::table('filepaths')
             ->select('xml_path')
             ->where('data_set', $setname)
