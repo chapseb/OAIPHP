@@ -3,24 +3,63 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-8">
         <a role="button" class="btn btn-primary" href="{{ urlFor('listset') }}">Retour vers la liste des sets</a>
         <a role="button" class="btn btn-primary" href="{{ urlFor('listmetadataformat',{"set": set}) }}">Retour vers la liste des formats</a>
-            <h3 class="page-header">Liste des fichiers dans le set {{ set }}</h3>
-            <ul class="list-group">
+            <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Liste des fichiers dans le set {{ set }}</th>
+                        <th>
+                            statut
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
             {% for file in listFiles %}
             {% set title = file.xml_path|split('/')|last %}
-                <li class="list-group-item">
-                    <div class="row colonne show-grid">
-                        <div class="col-sm-8"><span class="label label-primary">{{ title }}</span></div>
-                        <div class="col-sm-4"><span class="label label-success">{{ file.state }}</span></div>
-                        <div class="col-sm-4"><span class="label label-info">{{ file.metadata_format }}</span></div>
-                        <div class="col-sm-4"><span class="label label-default">{{ file.xml_path }}</span></div>
-                    </div>
-                </li>
+                    <tr class="btnDelete" data-id="{{ file.id }}" >
+                        <td>
+                            <dl>
+                                <dt><h4><span class="label label-primary">{{ title }}</span></h4></dt>
+                                <dd><h5><span class="label label-info">{{ file.metadata_format }}</span><span class="label label-warning">{{ file.xml_path }}</span></h5></dd>
+                            </dl>
+
+                        </td>
+                        <td><h4><span class="label label-success">{{ file.state }}</span></h4></td>
+                        <td><button  data-toggle="modal" data-target="#myremoveModal" class="btnDelete btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td>
+                    </tr>
             {% endfor %}
-            </ul>
+               </tbody>
+          </table>
         </div>
+        </div>
+           <!-- start: Delete Coupon Modal -->
+<div class="modal fade" id="myremoveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h3 class="modal-title" id="myModalLabel">Attention !</h3>
+
+            </div>
+            <div class="modal-body">
+                 <h4> Etes-vous sure de vouloir supprimer ce parcours ?</h4>
+            </div>
+            <!--/modal-body-collapse -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="btnDelteYes" href="#">OUI</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">NON</button>
+            </div>
+            <!--/modal-footer-collapse -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal --> 
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->

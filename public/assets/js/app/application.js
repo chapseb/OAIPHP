@@ -50,5 +50,14 @@ $(function() {
         }
         $('#myInput').focus();
     });
+            $('button.btnDelete').on('click', function (e) {
+                e.preventDefault();
+                var id = $(this).closest('tr').data('id');
+                $('#myremoveModal').data('id', id);
+            });
+            $('#btnDelteYes').click(function () {
+                var id = $('#myremoveModal').data('id');
+                $('[data-id=' + id + ']').remove();
+            });
 
 });

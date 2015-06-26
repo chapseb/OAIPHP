@@ -95,7 +95,7 @@ Class FilesController extends BaseController
     public function listFiles($nameSet, $metadataformat)
     {
         $this->data['listFiles'] = DB::table('filepaths')
-            ->select('xml_path', 'state', 'metadata_format')
+            ->select('id', 'xml_path', 'state', 'metadata_format')
             ->where('data_set', $nameSet)
             ->where('xml_path', '!=', 'NULL')
             ->where('metadata_format', $metadataformat)
