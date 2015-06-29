@@ -33,11 +33,9 @@
                                     <span class="sr-only"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    {% for format in existingtype %}
+                                    {% for format in existingtype[loop.index0] %}
                                         {% for tests in format %}
-                                            {%for test in tests  %}
-                                                <li><a href="{{ urlFor('displaydeletefiles',{ 'set': set.set_name, 'format': test })}}">{{ test }}</a></li>
-                                            {% endfor %}
+                                                <li><a href="{{ urlFor('displaydeletefiles',{ 'set': set.set_name, 'format': tests })}}">{{ tests }}</a></li>
                                         {% endfor %}
                                     {% endfor %}
                                 </ul>
