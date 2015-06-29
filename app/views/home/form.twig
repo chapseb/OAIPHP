@@ -1,4 +1,10 @@
-<form role="form" class="form-horizontal" action="{{ urlFor('doRegister') }}" method="post">
+{% if flash.message %}
+<div class="alert alert-danger alert-dismissable" style="margin-top: 25px">
+    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+    {{ flash.message }}
+</div>
+{% endif %}
+<form role="form" class="form-horizontal" action="{{ urlFor('doRegister') }}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="user_id" name="id">
 
     <div class="form-group">

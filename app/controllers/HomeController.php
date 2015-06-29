@@ -1,7 +1,7 @@
 <?php
 
 
-use \Sentry;
+//use \Sentry;
 
 Class HomeController extends BaseController
 {
@@ -40,28 +40,36 @@ Class HomeController extends BaseController
     public function doRegister()
     {
         try{
-            print_r(Input::post());
-            /*if ($error) {
-                App::flash('email', $e->getMessage());
-                App::flash('firstName', $email);
-                App::flash('name', $email);
-                App::flash('organization', $redirect);
-                App::flash('password', $remember);
-                App::flash('confirmation', $remember);
-                Response::redirect($this->siteUrl('login'));
-            }*/
-            $newUser = Sentry::createUser(
-                array(
-                    'email'       => Input::post('email'),
-                    'password'    => Input::post('password'),
-                    'first_name'  => Input::post('first_name'),
-                    'last_name'   => Input::post('name'),
-                    'organization' => Input::post('organization'),
-                    'activated'   => true,
-                )
-            );
+            $test=0;
+            if ($this->testemail(Input::post('email'))== 0){
+                if (strlen(Input::post('password')) >= 8 ) {
+                    if (Input::post('password') == Input::post('confirm_password')) {
+                        $newUser = Sentry::createUser(
+                            array(
+                                'email'       => Input::post('email'),
+                                'password'    => Input::post('password'),
+                                'first_name'  => Input::post('first_name'),
+                                'last_name'   => Input::post('last_name'),
+                                'organization' => Input::post('organization'),
+                                'activated'   => true,
+                                )
+                        );
+                        Response::redirect($this->siteUrl('login'));
+                    } else {
+                        App::flash('message', 'Password does not match.');
+                        $test=1;
+                    }
+                } else {
+                App::flash('message',  'Votre mot de passe est trop cour (plus de 8 charactères)');
+                }
+            } else {
+               App::flash('message',  'Votre adresse email n\'est pas valide');
+            }
             $newUser->save();
-        }catch(\Exception $e){
+            $activationCode = $user->getActivationCode();
+                Response::redirect($this->siteUrl('register'));
+        } catch(\Exception $e)
+        {
             App::flash('message', $e->getMessage());
         }
     }
@@ -75,6 +83,23 @@ Class HomeController extends BaseController
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
         return $data;
+    }
+
+    private function testemail($email){
+        $atom   = '[-a-z0-9!#$%&\'*+\\/=?^_`{|}~]';   // caractères autorisés avant l'arobase
+        $domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)'; // caractères autorisés après l'arobase (nom de domaine)
+        $regex = '/^' . $atom . '+' .   // Une ou plusieurs fois les caractères autorisés avant l'arobase
+        '(\.' . $atom . '+)*' .         // Suivis par zéro point ou plus
+                                        // séparés par des caractères autorisés avant l'arobase
+        '@' .                           // Suivis d'un arobase
+        '(' . $domain . '{1,63}\.)+' .  // Suivis par 1 à 63 caractères autorisés pour le nom de domaine
+                                        // séparés par des points
+        $domain . '{2,63}$/i';          // Suivi de 2 à 63 caractères autorisés pour le nom de domaine
+        if (!preg_match($regex, $email)) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 }
