@@ -91,5 +91,7 @@ $(function() {
                     e.relatedTarget // previous active tab
             });
 
+            $('#listsettable').dataTable();
+
 });
 

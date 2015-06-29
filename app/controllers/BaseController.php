@@ -232,6 +232,7 @@ class BaseController
         $this->loadCss("font-awesome.min.css");
         $this->loadCss("sb-admin.css");
         $this->loadCss("custom.css");
+        $this->loadCss("jquery.dataTables.min.css");
     }
 
     /**
@@ -244,6 +245,7 @@ class BaseController
         $this->loadJs("plugins/metisMenu/jquery.metisMenu.js");
         $this->loadJs("sb-admin.js");
         $this->loadJs("app/application.js");
+        $this->loadJs("jquery.dataTables.min.js");
     }
 
     /**
