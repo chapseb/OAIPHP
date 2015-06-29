@@ -286,25 +286,30 @@ Class FilesController extends BaseController
             if (!empty($listToModifyFiles) ) {
                 foreach ( $listToModifyFiles as $modifyFile) {
                     try {
-                        $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                        $xmlFile = simplexml_load_file(App::config('pathfile') . $modifyFile);
+                        $create = date("Y-m-d G:i:s", filectime(App::config('pathfile') . $modifyFile));
                         if ($format == 'ead' || $format == 'ape_ead') {
                             $create = $xmlFile->xpath('.//creation/date');
-                            if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
-                                $create = (string) $create[0]['normal'];
+                            if (!empty($create)) {
+                                if ( (string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                                    $create = (string) $create[0]['normal'];
+                                } else {
+                                    $create = (string) $create[1]['normal'];
+                                }
                             } else {
-                                $create = (string) $create[1]['normal'];
+                                 $create = date("Y-m-d G:i:s", filectime(App::config('pathfile') . $modifyFile));
                             }
                         }
                         $editFileDB = \Filepath::where(
                             'xml_path',
                             $modifyFile
-                        )->first();
-                        if ($editFileDB['modification_date'] < $create
-                            &&  $editFileDB['data_set'] == $setname
-                        ) {
+                        )->where('data_set', $setname)
+                        ->first();
+
+                        if ( $editFileDB['modification_date'] < $create ) {
                             $editFileDB->modification_date = $create;
                             $editFileDB->save();
-                        } else if ($editFileDB['data_set'] != $setname) {
+                        } else if (empty($editFileDB)) {
                             array_push($filesToAdd, $modifyFile);
                         }
                     } catch ( \Exception $e) {
@@ -316,7 +321,6 @@ Class FilesController extends BaseController
                             )
                         );
                     }
-
                 }
             }
 
@@ -325,12 +329,18 @@ Class FilesController extends BaseController
                 foreach ( $filesToAdd as &$file ) {
                     try {
                         $xmlFile = simplexml_load_file(App::config('pathfile') . $file);
+                        $create = date("Y-m-d G:i:s", filectime(App::config('pathfile') . $file));
+                        $createmodif = date("Y-m-d G:i:s", filemtime(App::config('pathfile') . $file));
                         if ($format == 'ead' || $format == 'ape_ead') {
                             $create = $xmlFile->xpath('.//creation/date');
-                            if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
-                                $create = (string) $create[0]['normal'];
+                            if (!empty($create)) {
+                                if ((string) $create[0]['normal'] > (string) $create[1]['normal']) {
+                                    $create = (string) $create[0]['normal'];
+                                } else {
+                                    $create = (string) $create[1]['normal'];
+                                }
                             } else {
-                                $create = (string) $create[1]['normal'];
+                                 $create = date("Y-m-d G:i:s", filectime(App::config('pathfile') . $file));
                             }
                         }
                         $addFile = new \Filepath;
