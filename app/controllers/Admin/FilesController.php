@@ -103,6 +103,12 @@ Class FilesController extends BaseController
             ->where('xml_path', '!=', 'NULL')
             ->where('metadata_format', $metadataformat)
             ->get();
+        $this->data['removelistFiles'] = DB::table('deletedfiles')
+            ->select('id', 'xml_path', 'metadata_format')
+            ->where('data_set', $nameSet)
+            ->where('metadata_format', $metadataformat)
+            ->get();
+
         $this->data['template'] = 'admin/listfiles.twig';
         $this->data['set'] = $nameSet;
         App::render('admin/index.twig', $this->data);
@@ -448,6 +454,8 @@ Class FilesController extends BaseController
                     $deleteFile->oai_identifier
                         = $databaseSelect[0]['oai_identifier'];
                     $deleteFile->data_set       = $set;
+                    $deleteFile->metadata_format       
+                        = $databaseSelect[0]['metadata_format'];
                     $deleteFile->save();
                 } catch ( \Exception $e ) {
                     App::flash('error', $e->getMessage());
@@ -496,6 +504,8 @@ Class FilesController extends BaseController
                 $deleteFile->oai_identifier
                     = $databaseSelect[0]['oai_identifier'];
                 $deleteFile->data_set       = $set;
+                $deleteFile->metadata_format
+                    = $databaseSelect[0]['metadata_format'];
                 $deleteFile->save();
             } catch ( \Exception $e ) {
                 echo json_encode('error supression sql');
