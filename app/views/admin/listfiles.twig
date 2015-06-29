@@ -19,7 +19,7 @@
     <div class="tab-content">
         <div class="tab-pane fade in active" id="A">
 <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="listFilestable">
                 <thead>
                     <tr>
                         <th>Liste des fichiers dans le set <span id="nameset">{{ set }}</span></th>
@@ -57,8 +57,8 @@
 
             </div>
             <div class="modal-body">
-                 <h4> Etes-vous sure de vouloir supprimer ce parcours ?</h4>
-            </div>g
+                 <h4> Etes-vous sure de vouloir supprimer ce fichiers ?</h4>
+            </div>
             <!--/modal-body-collapse -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal" id="btnDelteYes" href="#">OUI</button>
@@ -75,7 +75,7 @@
         </div>
         <div class="tab-pane fade" id="B">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="removelistFilestable" >
                 <thead>
                     <tr>
                         <th>Liste des fichiers supprimés dans le set <span id="nameset">{{ set }}</span></th>

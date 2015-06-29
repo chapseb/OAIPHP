@@ -53,11 +53,14 @@ $(function() {
             $('.btnDelete').on('click', function (e) {
                 //e.preventDefault();
                 var id = $(this).closest('tr').data('id');
+                var row = $(this).closest('tr').html();
                 $('#myremoveModal').data('id', id);
+                $('#myremoveModal').data('row', row);
             });
             $('#btnDelteYes').unbind('click').bind('click', function () {
                 var nameset = $('#nameset ').text();
                 var id = $('#myremoveModal').data('id');
+                var row = $('#myremoveModal').data('row');
                 $.ajax({
                 type: "POST",
                 data: {id: id},
@@ -68,6 +71,9 @@ $(function() {
                     if (msg == "true"){
                         message='<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Le fichier a bien été supprimé !</div>';
                     $('.answer').html(message);
+                    var dtdd = $(row).find('dl').html();
+                    var newdeletedcell= '<td><dl>'+dtdd+'</dl></td><td><h4><span class="label label-danger">Supprimé</span></h4></td>';
+                    $('#removelistFilestable tbody').append('<tr>'+newdeletedcell+'</tr>');
                     }else{
                         message='<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Erreur lors de la suppression du fichier :( </div>';
                         $('.answer').html(message);
