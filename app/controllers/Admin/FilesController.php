@@ -306,7 +306,7 @@ Class FilesController extends BaseController
                         )->where('data_set', $setname)
                         ->first();
 
-                        if ( $editFileDB['modification_date'] < $create ) {
+                        if ( !empty($editFileDB) && $editFileDB['modification_date'] < $create ) {
                             $editFileDB->modification_date = $create;
                             $editFileDB->save();
                         } else if (empty($editFileDB)) {
@@ -466,7 +466,7 @@ Class FilesController extends BaseController
                     $deleteFile->oai_identifier
                         = $databaseSelect[0]['oai_identifier'];
                     $deleteFile->data_set       = $set;
-                    $deleteFile->metadata_format       
+                    $deleteFile->metadata_format
                         = $databaseSelect[0]['metadata_format'];
                     $deleteFile->save();
                 } catch ( \Exception $e ) {
