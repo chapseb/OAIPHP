@@ -78,8 +78,10 @@ Class FilesController extends BaseController
         $this->data['listformats']
             = DB::table('filepaths')
             ->distinct()
-            ->select('metadata_format')
+            ->selectRaw('metadata_format, count(xml_path) as Count')
             ->where('data_set', $nameSet)
+            ->where('xml_path', '!=', 'NULL')
+            ->groupBy('metadata_format')
             ->get();
         $this->data['template'] = 'admin/listformats.twig';
         $this->data['nameset']  = $nameSet;

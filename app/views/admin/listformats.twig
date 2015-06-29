@@ -3,15 +3,18 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-sm-12 text-center">
-            <h3 class="page-header">Liste des formats dans notre set</h3>
-            <ul class="list-group">
+        <div class="col-sm-6 text-center">
+        <nav>
+            <ul class="pager">
+                <li><a href="{{ urlFor('listset') }}"><span aria-hidden="true">&larr;</span> Retour vers la liste des sets</a></li>
+            </ul>
+        </nav>
+<h3 class="page-header">Liste des formats dans notre set</h3>
+            <div class="list-group">
                 {% for format in listformats %}
-                    <li <li class="list-group-item"><a href=" {{urlFor('listfile', {'set': nameset,'metadataformat': format.metadata_format})}}"> {{ format.metadata_format }}</a></li>
+                    <a class="list-group-item" href=" {{urlFor('listfile', {'set': nameset,'metadataformat': format.metadata_format})}}"><strong>{{ format.metadata_format|upper }}</strong><span class="badge">{{format.count}}</span></a>
                 {% endfor %}
-            </ul>
-
-            </ul>
+            </div>
         </div>
         <!-- /.col-lg-12 -->
     </div>
