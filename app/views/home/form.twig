@@ -1,0 +1,53 @@
+<form role="form" class="form-horizontal" action="{{ urlFor('doRegister') }}" method="post">
+    <input type="hidden" id="user_id" name="id">
+
+    <div class="form-group">
+        <label for="user_email" class="col-lg-4 control-label">Email</label>
+        <div class="col-lg-8">
+            <input type="text" class="input-sm form-control validate[required]" name="email" id="user_email" placeholder="Email" required>
+        </div>
+        {{ flash.email }}
+    </div>
+
+    <div class="form-group">
+        <label for="first_name" class="col-lg-4 control-label">Prénom</label>
+        <div class="col-lg-8">
+            <input type="text" class="input-sm form-control validate[required]" name="first_name" id="first_name" required>
+        </div>
+        {{ flash.firstName }}
+    </div>
+
+    <div class="form-group">
+        <label for="last_name" class="col-lg-4 control-label">Nom</label>
+        <div class="col-lg-8">
+            <input type="text" class="input-sm form-control" name="last_name" id="last_name" placeholder="Nom" required>
+            </div>
+        {{ flash.name }}
+    </div>
+
+    <div class="form-group">
+        <label for="organization" class="col-lg-4 control-label">Organisation</label>
+        <div class="col-lg-8">
+            <input type="text" class="input-sm form-control" name="organization" id="organization" placeholder="Organisation" required>
+        </div>
+        {{ flash.organization }}
+    </div>
+
+    <div class="form-group">
+        <label for="password" class="col-lg-4 control-label">Mot de passe</label>
+        <div class="col-lg-8">
+            <input type="password" class="input-sm form-control validate[required,minSize[6],maxSize[50]]" name="password" id="password" placeholder="Mot de passe" required>
+        </div>
+        {{ flash.password }}
+    </div>
+
+    <div class="form-group">
+        <label for="confirm_password" class="col-lg-4 control-label">Confirmation du mot de passe</label>
+        <div class="col-lg-8">
+            <input type="password" class="input-sm form-control validate[required,equals[password]]" name="confirm_password" id="confirm_password" placeholder="Confirmation" required>
+        {{ flash.confirmation }}
+        </div>
+    </div>
+
+    <input type="submit" class="btn btn-success" value="Enregistrer" />
+</form>
