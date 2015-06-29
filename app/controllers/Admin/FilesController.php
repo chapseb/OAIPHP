@@ -273,7 +273,7 @@ Class FilesController extends BaseController
                             array_push($filesToAdd, $file);
                         }
                     } catch ( \Exception $e) {
-                        App::flash('error', $e->getMessage());
+                        App::flash('error', 'Fichiers à réinitialiser: ' . $e->getMessage());
                         Response::redirect(
                             $this->siteUrl(
                                 'admin/displayAddFiles/' .
@@ -308,7 +308,7 @@ Class FilesController extends BaseController
                             array_push($filesToAdd, $modifyFile);
                         }
                     } catch ( \Exception $e) {
-                        App::flash('error', $e->getMessage());
+                        App::flash('error', 'ajout des fichiers à modifier: ' .$e->getMessage());
                         Response::redirect(
                             $this->siteUrl(
                                 'admin/displayAddFiles/' .
@@ -343,7 +343,7 @@ Class FilesController extends BaseController
                         $addFile->state             = 'Published';
                         $addFile->save();
                     } catch ( \Exception $e) {
-                        App::flash('error', $e->getMessage());
+                        App::flash('error', 'Saving file:' .$e->getMessage());
                         Response::redirect(
                             $this->siteUrl(
                                 'admin/displayAddFiles/' .
