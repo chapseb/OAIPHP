@@ -452,7 +452,7 @@ Class FilesController extends BaseController
                 // get the oai_identifier
                 try {
                     $databaseSelect = DB::table('filepaths')
-                    ->select('oai_identifier')
+                    ->select('*')
                     ->where('xml_path', $fileToDelete)
                     ->get();
 
