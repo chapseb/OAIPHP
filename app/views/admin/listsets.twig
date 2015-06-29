@@ -1,7 +1,9 @@
 {% block body %}
 <div class="container">
+    <div class="row">
+            <div class="col-sm-10">
             <h3 class="page-header text-center">Liste de vos sets</h3>
-            <table class="table" id="listsettable">
+            <table class="table table-responsive" id="listsettable">
                 <thead>
                 <tr>
                     <th>Nom du set</th>
@@ -88,6 +90,8 @@
         {{ flash.error }}
     </div>
     {% endif %}
+    </div>
+    </div>
     <!-- /.row -->
 </div>
 <!-- /.container -->

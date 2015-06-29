@@ -3,50 +3,76 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-sm-12 text-center">
-            <p class="text-left"><a role="button" class="btn btn-primary" href="{{ urlFor('listset') }}">Retour vers la liste des sets</a></p>
-            <h3 class="page-header">Suppression de fichiers {{ format }} dans le set {{ setname }}</h3>
-            {% if flash.error is defined or flash.message is defined %}
-                {% if flash.message is defined %}
-                <div class= "message">
-                    {{ flash.message }}
-                </div>
-                {% endif %}
-                {% if flash.error is defined %}
-                <div class="error">
-                    {{ flash.error }}
-                </div>
-                {% endif %}
-                <a href="{{ urlFor('listfile', {'set': setname, 'metadataformat': format}) }}" role="button" class="btn btn-primary">Voir la liste des fichiers</a>
-            {% else %}
-            <form role="form" class="form-horizontal" action="{{urlFor('deletesetfiles', {'set': setname })}}" method="POST">
-                <div class="form-group">
-                    <div class="col-lg-6">
-                        <div class="checkbox">
-                            <label><input type="checkbox" id="checkAll" class="check" value="Tout cocher">Tout cocher</label>
-                        </div>
+        <div class="col-sm-8">
+        <nav>
+            <ul class="pager">
+                <li><a href="{{ urlFor('listset') }}"><span aria-hidden="true">&larr;</span> Retour vers la liste des sets</a></li>
+            </ul>
+        </nav>
+        <h3 class="page-header">Suppression de fichiers {{ format }} dans le set {{ setname }}</h3>
+        {% if flash.error is defined or flash.message is defined %}
+            {% if flash.message is defined %}
+            <div class= "message">
+                {{ flash.message }}
+            </div>
+            {% endif %}
+            {% if flash.error is defined %}
+            <div class="error">
+                {{ flash.error }}
+            </div>
+            {% endif %}
+            <a href="{{ urlFor('listfile', {'set': setname, 'metadataformat': format}) }}" role="button" class="btn btn-primary">Voir la liste des fichiers</a>
+        {% else %}
+        <form role="form" class="form-horizontal" action="{{urlFor('deletesetfiles', {'set': setname })}}" method="POST">
+            <div class="form-group">
+                <div class="col-lg-8">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nom du fichier</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="checkAll" class="check" value="Tout cocher">
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>Tout cocher</td>
+                            </tr>
+
                         {% for file in files %}
-                        <div class="checkbox">
-                            <label>
-                                {% set title = file.xml_path|split('/')|last %}
-                                <input type="checkbox" name="list_files[]" class="check" value="{{ file.xml_path }}">
-                                {{ title }}
-                            </label>
-                        </div>
-                        {% endfor %}
-                    </div>
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        <label>
+                                            {% set title = file.xml_path|split('/')|last %}
+                                            <input type="checkbox" name="list_files[]" class="check" value="{{ file.xml_path }}">
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>{{title}}</td>
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
                 </div>
-                <input type="hidden" name="format" value="{{ format }}">
-                <input type="hidden" name="setname" value="{{ setname }}">
-                <button type="button" data-toggle="modal" data-target="#myModalDelete" class=" btn btn-success">Supprimer</button>
-                <div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalDeleteLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times</span></button>
-                            <h4>Confirmation de la suppression</h4>
-                        </div>
-                        <div class="modal-body" id="deleteFilesConfirm">
+            </div>
+            <input type="hidden" name="format" value="{{ format }}">
+            <input type="hidden" name="setname" value="{{ setname }}">
+            <button type="button" data-toggle="modal" data-target="#myModalDelete" class=" btn btn-success">Supprimer</button>
+            <div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalDeleteLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times</span></button>
+                        <h4>Confirmation de la suppression</h4>
+                    </div>
+                    <div class="modal-body" id="deleteFilesConfirm">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
