@@ -1,8 +1,6 @@
 <?php
 
 
-//use \Sentry;
-
 Class HomeController extends BaseController
 {
 
@@ -11,7 +9,7 @@ Class HomeController extends BaseController
         $this->data['title'] ='OAI | Accueil';
         if ( ! Sentry::check() ){
             $this->data['title'] = "Bienvenue dans l'application OAI d'Anaphore";
-            App::render('welcome.twig', $this->data);
+            $this->app->render('welcome.twig', $this->data);
         } else {
             Response::redirect($this->siteUrl('admin'));
         }
@@ -41,7 +39,7 @@ Class HomeController extends BaseController
     {
         try{
             $test=0;
-            if ($this->testemail(Input::post('email'))== 0){
+            if ($this->_testemail(Input::post('email'))== 0) {
                 if (strlen(Input::post('password')) >= 8 ) {
                     if (Input::post('password') == Input::post('confirm_password')) {
                         $newUser = Sentry::createUser(
@@ -60,12 +58,25 @@ Class HomeController extends BaseController
                         $test=1;
                     }
                 } else {
-                App::flash('message',  'Votre mot de passe est trop cour (plus de 8 charactères)');
+                    App::flash(
+                        'message',
+                        'Votre mot de passe est trop court (plus de 8 charactères)'
+                    );
                 }
             } else {
-               App::flash('message',  'Votre adresse email n\'est pas valide');
+                App::flash('message',  'Votre adresse email n\'est pas valide');
             }
             $newUser->save();
+            if (!empty(Input::post('organization'))
+                && !file_exists(App::config('pathfile') . Input::post('organization'))
+            ) {
+                mkdir(App::config('pathfile') . Input::post('organization'));
+                $listFormat = DB::table('set_types')->select('name')->get();
+                print_r($listFormat);
+                foreach ($listFormat as $format) {
+                    mkdir(App::config('pathfile') . Input::post('organization') . '/' . $format['name']);
+                }
+            }
             $activationCode = $user->getActivationCode();
                 Response::redirect($this->siteUrl('register'));
         } catch(\Exception $e)
@@ -75,17 +86,14 @@ Class HomeController extends BaseController
     }
 
     /**
+     *  Test email
      *
+     * @param string $email input email
+     *
+     * @return int
      */
-    public function testInput($data)
+    private function _testemail($email)
     {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
-
-    private function testemail($email){
         $atom   = '[-a-z0-9!#$%&\'*+\\/=?^_`{|}~]';   // caractères autorisés avant l'arobase
         $domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)'; // caractères autorisés après l'arobase (nom de domaine)
         $regex = '/^' . $atom . '+' .   // Une ou plusieurs fois les caractères autorisés avant l'arobase
