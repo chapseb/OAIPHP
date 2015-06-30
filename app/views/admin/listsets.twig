@@ -45,11 +45,15 @@
                                     <span class="sr-only"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    {% for format in existingtype[loop.index0] %}
-                                        {% for tests in format %}
-                                                <li><a href="{{ urlFor('displaydeletefiles',{ 'set': set.set_name, 'format': tests })}}">{{ tests }}</a></li>
+                                    {% if existingtype is not empty %}
+                                    {% for formats in existingtype[loop.index0] %}
+                                        {% for format in formats %}
+                                                <li><a href="{{ urlFor('displaydeletefiles',{ 'set': set.set_name, 'format': format })}}">{{ format }}</a></li>
                                         {% endfor %}
-                                    {% endfor %}
+                                     {% else %}
+                                        <li>Il n'y a pas de fichier à supprimer</li>
+                                   {% endfor %}
+                                    {% endif %}
                                 </ul>
                             </div>
                         </td>
