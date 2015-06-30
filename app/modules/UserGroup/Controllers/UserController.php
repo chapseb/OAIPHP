@@ -168,28 +168,31 @@ class UserController extends BaseController
         try{
             $input = Input::post();
 
-            if($input['password'] != $input['confirm_password']){
+            if ($input['password'] != $input['confirm_password']) {
                 throw new Exception("Le mot de passe et la confirmation ne correspondent pas", 1);
             }
 
-            $user = Sentry::createUser(array(
-                'email'       => $input['email'],
-                'password'    => $input['password'],
-                'first_name'  => $input['first_name'],
-                'last_name'   => $input['last_name'],
-                'organization'=> $input['organization'],
-                'activated'   => 1
-            ));
+            $user = Sentry::createUser(
+                array(
+                    'email'       => $input['email'],
+                    'password'    => $input['password'],
+                    'first_name'  => $input['first_name'],
+                    'last_name'   => $input['last_name'],
+                    'organization'=> $input['organization'],
+                    'activated'   => 1
+                )
+            );
 
-
-            $pathToMakeDirectories = App::config('pathfile'). $input['organization'];
-            mkdir($pathToMakeDirectories, 0775);
-            $existingFormat = DB::table('set_types')
-                ->lists('name');
-            $listFormat = '';
-            foreach ($existingFormat as $format) {
-                $listFormat .= ' ' . $format;
-                mkdir($pathToMakeDirectories . "/". $format, 0775);
+            if (!empty($input['organization']) 
+                && !file_exists(App::config('pathfile') . $input['organization'])
+            ) {
+                $pathToMakeDirectories = App::config('pathfile'). $input['organization'];
+                mkdir($pathToMakeDirectories, 0775);
+                $existingFormat = DB::table('set_types')
+                    ->lists('name');
+                foreach ($existingFormat as $format) {
+                    mkdir($pathToMakeDirectories . "/". $format, 0775);
+                }
             }
 
             $success = true;
@@ -198,16 +201,18 @@ class UserController extends BaseController
             $message = $e->getMessage();
         }
 
-        if(Request::isAjax()){
+        if (Request::isAjax()) {
             Response::headers()->set('Content-Type', 'application/json');
-            Response::setBody(json_encode(
-                array(
-                    'success'   => $success,
-                    'data'      => ($user) ? $user->toArray() : $user,
-                    'message'   => $message,
-                    'code'      => $success ? 200 : 500
+            Response::setBody(
+                json_encode(
+                    array(
+                        'success'   => $success,
+                        'data'      => ($user) ? $user->toArray() : $user,
+                        'message'   => $message,
+                        'code'      => $success ? 200 : 500
+                    )
                 )
-            ));
+            );
         }else{
             Response::redirect($this->siteUrl('admin/user'));
         }

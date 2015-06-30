@@ -72,9 +72,8 @@ Class HomeController extends BaseController
             ) {
                 mkdir(App::config('pathfile') . Input::post('organization'));
                 $listFormat = DB::table('set_types')->select('name')->get();
-                print_r($listFormat);
                 foreach ($listFormat as $format) {
-                    mkdir(App::config('pathfile') . Input::post('organization') . '/' . $format['name']);
+                    mkdir(App::config('pathfile') . Input::post('organization') . '/' . $format['name'], 0755);
                 }
             }
             $activationCode = $user->getActivationCode();
