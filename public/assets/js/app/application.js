@@ -93,5 +93,29 @@ $(function() {
 
             $('#listsettable').dataTable();
 
+                        //setname: $("#setname").val(),
+                        //format: $("#format").val()
+ $('#fileupload').fileupload({
+            type: 'POST',
+        // Uncomment the following to send cross-domain cookies:
+        //xhrFields: {withCredentials: true},
+        url: '/admin/uploadsFiles/'
+    });
+        // Load existing files:
+        $('#fileupload').addClass('fileupload-processing');
+        $.ajax({
+            // Uncomment the following to send cross-domain cookies:
+            //xhrFields: {withCredentials: true},
+            type: 'POST',
+            url: $('#fileupload').fileupload('option', 'url'),
+            dataType: 'json',
+            context: $('#fileupload')[0]
+        }).always(function () {
+            $(this).removeClass('fileupload-processing');
+        }).done(function (result) {
+            $(this).fileupload('option', 'done')
+                .call(this, $.Event('done'), {result: result});
+        });
+
 });
 

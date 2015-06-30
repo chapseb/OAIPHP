@@ -29,7 +29,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     {% for format in listformats%}
-                                        <li><a href="{{ urlFor('displayaddfiles',{ 'set': set.set_name, 'format': format.name })}}">{{ format.name }}</a></li>
+                                        <li><a href="{{ urlFor('displayuploadsaddfiles',{ 'set': set.set_name, 'format': format.name })}}">{{ format.name }}</a></li>
                                 {% endfor %}
                             </ul>
                             </div>

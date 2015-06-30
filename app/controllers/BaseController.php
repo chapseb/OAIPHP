@@ -233,6 +233,7 @@ class BaseController
         $this->loadCss("sb-admin.css");
         $this->loadCss("custom.css");
         $this->loadCss("jquery.dataTables.min.css");
+        $this->loadCss("plugins/jquery-uploads/jquery.fileupload.css");
     }
 
     /**
@@ -244,8 +245,11 @@ class BaseController
         $this->loadJs("bootstrap.min.js");
         $this->loadJs("plugins/metisMenu/jquery.metisMenu.js");
         $this->loadJs("sb-admin.js");
-        $this->loadJs("app/application.js");
         $this->loadJs("jquery.dataTables.min.js");
+        $this->loadJs("plugins/jquery-uploads/vendor/jquery.ui.widget.js");
+        $this->loadJs("plugins/jquery-uploads/jquery.iframe-transport.js");
+        $this->loadJs("plugins/jquery-uploads/jquery.fileupload.js");
+        $this->loadJs("app/application.js");
     }
 
     /**

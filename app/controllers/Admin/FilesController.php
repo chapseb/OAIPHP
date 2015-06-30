@@ -159,6 +159,25 @@ Class FilesController extends BaseController
             );
         }
     }
+    /**
+     * Render the upload files template
+     *
+     * @param string $setname Name of the set
+     * @param string $format  Type of format
+     *
+     * @return void
+     */
+    public function displayUploadsAddFiles($setname, $format)
+    {
+        $this->data['title'] ='OAI | Sélectionner vos fichiers';
+        $organization = Sentry::getUser()['organization'];
+        $path = App::config('pathfile') . $organization . "/" . $format;
+        $this->data['setname']  = $setname;
+        //$this->data['files']    = $listFiles;
+        $this->data['format']   = $format;
+        $this->data['template'] = 'admin/uploadsaddfiles.twig';
+        App::render('admin/index.twig', $this->data);
+    }
 
     /**
      * Render the add files template
@@ -437,6 +456,40 @@ Class FilesController extends BaseController
         );
     }
 
+    /**
+     * Upload Files
+     *
+     * @return void
+     */
+    public function uploadsFiles()
+    {
+        $datafiles = Input::post();
+        var_dump($datafiles);
+        /*try {
+            //if (empty()) {
+            //    echo json_encode(['error'=>'No files found for upload.']); 
+                // or you can throw an exception 
+                return; // terminate
+            //}
+
+            // get format posted
+            $format = empty($_POST['format']) ? '' : $_POST['format'];
+            echo json_encode($format); 
+            // get user name posted
+            $setname = empty($_POST['setname']) ? '' : $_POST['setname'];
+        } catch ( \Exception $e ) {
+            App::flash('error', $e->getMessage());
+            $this->siteUrl('admin/displayUploadsAddFiles/'.$setname.'/'.$format);
+        }
+
+        App::flash(
+            'message',
+            'toto'
+        );
+        Response::redirect(
+            $this->siteUrl('admin/displayUploadsAddFiles/'.$setname.'/'.$format)
+        );*/
+    }
     /**
      * Delete files in a set
      *
