@@ -233,7 +233,7 @@ class BaseController
         $this->loadCss("sb-admin.css");
         $this->loadCss("custom.css");
         $this->loadCss("jquery.dataTables.min.css");
-        $this->loadCss("plugins/jquery-uploads/jquery.fileupload.css");
+        $this->loadCss("http://hayageek.github.io/jQuery-Upload-File/uploadfile.min.css", ["location"=>"external"]);
     }
 
     /**
@@ -241,15 +241,13 @@ class BaseController
      */
     protected function loadBaseJs()
     {
-        $this->loadJs("jquery-1.10.2.js");
+        $this->loadJs("jquery-1.10.2.js", ["position"=>"first"]);
         $this->loadJs("bootstrap.min.js");
         $this->loadJs("plugins/metisMenu/jquery.metisMenu.js");
         $this->loadJs("sb-admin.js");
         $this->loadJs("jquery.dataTables.min.js");
-        $this->loadJs("plugins/jquery-uploads/vendor/jquery.ui.widget.js");
-        $this->loadJs("plugins/jquery-uploads/jquery.iframe-transport.js");
-        $this->loadJs("plugins/jquery-uploads/jquery.fileupload.js");
         $this->loadJs("app/application.js");
+        $this->loadJs("jquery.uploadfile.min.js");
     }
 
     /**

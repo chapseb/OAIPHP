@@ -27,6 +27,7 @@ $(function() {
         $('#myInput').focus();
     });
 
+
     $('#myModalDelete').on('shown.bs.modal', function () {
         var listFiles = [];
         $('input:checked').each(function() {
@@ -50,72 +51,96 @@ $(function() {
         }
         $('#myInput').focus();
     });
-            $('.btnDelete').on('click', function (e) {
-                //e.preventDefault();
-                var id = $(this).closest('tr').data('id');
-                var row = $(this).closest('tr').html();
-                $('#myremoveModal').data('id', id);
-                $('#myremoveModal').data('row', row);
-            });
-            $('#btnDelteYes').unbind('click').bind('click', function () {
-                var nameset = $('#nameset ').text();
-                var id = $('#myremoveModal').data('id');
-                var row = $('#myremoveModal').data('row');
-                $.ajax({
-                type: "POST",
-                data: {id: id},
-                url: "/admin/deleteFileById/"+nameset,
-                success: function(msg)
-                {
-                    var message= '';
-                    if (msg == "true"){
-                        message='<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Le fichier a bien été supprimé !</div>';
-                    $('.answer').html(message);
-                    var dtdd = $(row).find('dl').html();
-                    var newdeletedcell= '<td><dl>'+dtdd+'</dl></td><td><h4><span class="label label-danger">Supprimé</span></h4></td>';
-                    $('#removelistFilestable tbody').append('<tr>'+newdeletedcell+'</tr>');
-                    }else{
-                        message='<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Erreur lors de la suppression du fichier :( </div>';
-                        $('.answer').html(message);
-                    }
-                }
-                });
-                $('[data-id=' + id + ']').remove();
-            });
-            $('#myTabs a').click(function (e) {
-                  e.preventDefault()
-                    $(this).tab('show')
-            });
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                  e.target // newly activated tab
-                    e.relatedTarget // previous active tab
-            });
 
-            $('#listsettable').dataTable();
-
-                        //setname: $("#setname").val(),
-                        //format: $("#format").val()
- $('#fileupload').fileupload({
-            type: 'POST',
-        // Uncomment the following to send cross-domain cookies:
-        //xhrFields: {withCredentials: true},
-        url: '/admin/uploadsFiles/'
+    $('.btnDelete').on('click', function (e) {
+        //e.preventDefault();
+        var id = $(this).closest('tr').data('id');
+        var row = $(this).closest('tr').html();
+        $('#myremoveModal').data('id', id);
+        $('#myremoveModal').data('row', row);
     });
-        // Load existing files:
-        $('#fileupload').addClass('fileupload-processing');
-        $.ajax({
-            // Uncomment the following to send cross-domain cookies:
-            //xhrFields: {withCredentials: true},
-            type: 'POST',
-            url: $('#fileupload').fileupload('option', 'url'),
-            dataType: 'json',
-            context: $('#fileupload')[0]
-        }).always(function () {
-            $(this).removeClass('fileupload-processing');
-        }).done(function (result) {
-            $(this).fileupload('option', 'done')
-                .call(this, $.Event('done'), {result: result});
-        });
 
+
+    $('#btnDelteYes').unbind('click').bind('click', function () {
+        var nameset = $('#nameset ').text();
+        var id = $('#myremoveModal').data('id');
+        var row = $('#myremoveModal').data('row');
+        $.ajax({
+        type: "POST",
+        data: {id: id},
+        url: "/admin/deleteFileById/"+nameset,
+        success: function(msg)
+        {
+            var message= '';
+            if (msg == "true"){
+                message='<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Le fichier a bien été supprimé !</div>';
+            $('.answer').html(message);
+            var dtdd = $(row).find('dl').html();
+            var newdeletedcell= '<td><dl>'+dtdd+'</dl></td><td><h4><span class="label label-danger">Supprimé</span></h4></td>';
+            $('#removelistFilestable tbody').append('<tr>'+newdeletedcell+'</tr>');
+            }else{
+                message='<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Erreur lors de la suppression du fichier :( </div>';
+                $('.answer').html(message);
+            }
+        }
+        });
+        $('[data-id=' + id + ']').remove();
+    });
+
+    $('#myTabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        e.target; // newly activated tab
+        e.relatedTarget; // previous active tab
+    });
+    $('#listsettable').dataTable();
+
+
+    var uploadObj = $("#fileuploader").uploadFile({
+        url:"/public/admin/uploadsFiles",
+        multiple:true,
+        autoSubmit:false,
+        fileName:"myfile",
+        formData: {"name":"Ravi","age":31},
+        maxFileSize:1024*100,
+        maxFileCount:2,
+        dynamicFormData: function()
+        {
+            var data ={ location:"INDIA"}
+            return data;
+        },
+        showStatusAfterSuccess:false,
+        dragDropStr: "<span><b>Faites glisser et déposez les fichiers</b></span>",
+        abortStr:"abandonner",
+        cancelStr:"résilier",
+        doneStr:"fait",
+        multiDragErrorStr: "Plusieurs Drag & Drop de fichiers ne sont pas autorisés.",
+        extErrorStr:"n'est pas autorisé. Extensions autorisées:",
+        sizeErrorStr:"n'est pas autorisé. Admis taille max:",
+        uploadErrorStr:"Upload n'est pas autorisé",
+        onSuccess:function(files,data,xhr){
+            $("#status").html("<font color='green'>Upload is success</font>");
+        },
+        onError: function(files,status,errMsg){
+            $("#status").html("<font color='red'>Upload is Failed</font>");
+        }
+
+    });
+
+
+    $("#startUpload").click(function()
+    {
+    uploadObj.startUpload();
+    });
+
+
+/*    $("#fileuploader").uploadFile({
+        url:"/public/admin/uploadsFiles",
+        multiple: true,
+        fileName:"myfile"
+    });
+*/
 });
 

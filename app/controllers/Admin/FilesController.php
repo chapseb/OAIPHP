@@ -463,7 +463,7 @@ Class FilesController extends BaseController
      */
     public function uploadsFiles()
     {
-        $datafiles = Input::post();
+        $datafiles = $_FILES;
         var_dump($datafiles);
         /*try {
             //if (empty()) {
