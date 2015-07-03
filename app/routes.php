@@ -45,6 +45,8 @@ Route::group(
 
         Route::get('/displayUploadsAddFiles/:set/:format', 'Admin\FilesController:displayUploadsAddFiles')->name('displayuploadsaddfiles');
 
+        Route::get('/displayUploadsDeleteFiles/:format', 'Admin\FilesController:displayUploadsDeleteFiles')->name('displayuploadsdeletefiles');
+
         Route::get('/displayDeleteFiles/:set/:format', 'Admin\FilesController:displayDeleteFiles')->name('displaydeletefiles');
 
         Route::post('/addFiles', 'Admin\FilesController:addFiles')->name('addfiles');

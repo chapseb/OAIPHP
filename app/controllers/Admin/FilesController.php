@@ -232,6 +232,28 @@ Class FilesController extends BaseController
     }
 
     /**
+     * Render the template of possible deleting files in a repository
+     *
+     * @param string $format Name of the format of files
+     *
+     * @return void
+     */
+    public function displayUploadsDeleteFiles($format)
+    {
+        $this->data['title'] ='OAI | Supprimer des fichiers uploadés';
+
+        $user = Sentry::getUser();
+        $path = App::config('pathfile')
+            . $user['organization'] . "/" . $format;
+        $listFiles = array_diff(scandir($path), array('..', '.'));
+        $this->data['files'] = $listFiles;
+        $this->data['format'] = $format;
+        $this->data['template'] = 'admin/uploaddeletefiles.twig';
+        App::render('admin/index.twig', $this->data);
+    }
+
+
+    /**
      * Add files in a set
      *
      * @return void
