@@ -7,6 +7,9 @@
         <nav>
             <ul class="pager">
                 <li><a href="{{ urlFor('listset') }}"><span aria-hidden="true">&larr;</span> Retour vers la liste des sets</a></li>
+                <li><a href="{{ urlFor('displayaddfiles', {'set': setname, 'format': format}) }}" >
+                    Ajoutez vos fichiers dans votre set<span aria-hidden="true">&rarr;</span>
+                </a></li>
             </ul>
         </nav>
             <h3 class="page-headeri">Ajout de fichiers {{ format }} dans le set {{ setname }}</h2>
@@ -31,7 +34,6 @@
                     <div id="status"></div>
                     <button id="startUpload" class="btn btn-primary">Démarrez l'upload</button>
                 </div>
-            <a href="{{ urlFor('displayaddfiles', {'set': setname, 'format': format}) }}" role="button" class="btn btn-primary">Ajoutez vos fichiers dans votre set</a>
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->

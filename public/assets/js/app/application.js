@@ -99,7 +99,7 @@ $(function() {
 
 
     var uploadObj = $("#fileuploader").uploadFile({
-        url:"/public/admin/uploadsFiles",
+        url:"/admin/uploadsFiles",
         method:"POST",
         allowedTypes:"xml",
         multiple:true,
