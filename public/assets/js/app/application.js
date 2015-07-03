@@ -100,18 +100,19 @@ $(function() {
 
     var uploadObj = $("#fileuploader").uploadFile({
         url:"/public/admin/uploadsFiles",
+        method:"POST",
+        allowedTypes:"xml",
         multiple:true,
         autoSubmit:false,
         fileName:"myfile",
-        formData: {"name":"Ravi","age":31},
-        maxFileSize:1024*100,
-        maxFileCount:2,
-        dynamicFormData: function()
+        formData: {"setname":$("#setname").val(),"format":$("#format").val()},
+        //maxFileCount:2,
+        /*dynamicFormData: function()
         {
             var data ={ location:"INDIA"}
             return data;
-        },
-        showStatusAfterSuccess:false,
+        },*/
+        //showStatusAfterSuccess:false,
         dragDropStr: "<span><b>Faites glisser et déposez les fichiers</b></span>",
         abortStr:"abandonner",
         cancelStr:"résilier",
@@ -121,20 +122,19 @@ $(function() {
         sizeErrorStr:"n'est pas autorisé. Admis taille max:",
         uploadErrorStr:"Upload n'est pas autorisé",
         onSuccess:function(files,data,xhr){
-            $("#status").html("<font color='green'>Upload is success</font>");
+            $("#status").html("<font color='green'>L'upload est un succès.</font>");
         },
         onError: function(files,status,errMsg){
-            $("#status").html("<font color='red'>Upload is Failed</font>");
+            $("#status").html("<font color='red'>L'upload is n\'a pas fonctionné</font>");
         }
-
     });
-
 
     $("#startUpload").click(function()
     {
-    uploadObj.startUpload();
+        uploadObj.startUpload();
     });
 
+   //$("#fileuploader").uploadFile(uploadObj);
 
 /*    $("#fileuploader").uploadFile({
         url:"/public/admin/uploadsFiles",

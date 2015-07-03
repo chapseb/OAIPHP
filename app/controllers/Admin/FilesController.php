@@ -296,7 +296,7 @@ Class FilesController extends BaseController
                         Response::redirect(
                             $this->siteUrl(
                                 'admin/displayAddFiles/' .
-                                $setname . '/' . Input::post('format')
+                                $setname . '/' . $format
                             )
                         );
                     }
@@ -336,7 +336,7 @@ Class FilesController extends BaseController
                         Response::redirect(
                             $this->siteUrl(
                                 'admin/displayAddFiles/' .
-                                $setname . '/' . Input::post('format')
+                                $setname . '/' . $format
                             )
                         );
                     }
@@ -376,7 +376,7 @@ Class FilesController extends BaseController
                         Response::redirect(
                             $this->siteUrl(
                                 'admin/displayAddFiles/' .
-                                $setname . '/' . Input::post('format')
+                                $setname . '/' . $format
                             )
                         );
                     }
@@ -463,20 +463,26 @@ Class FilesController extends BaseController
      */
     public function uploadsFiles()
     {
-        $datafiles = $_FILES;
-        var_dump($datafiles);
-        /*try {
-            //if (empty()) {
-            //    echo json_encode(['error'=>'No files found for upload.']); 
-                // or you can throw an exception 
+        try {
+            if (empty($_FILES['myfile']['name'])) {
+                echo json_encode(['error'=>'No files found for upload.']);
+                // or you can throw an exception
                 return; // terminate
-            //}
+            }
+            $datafiles = $_FILES;
+            $setname = Input::post('setname');
+            $format = Input::post('format');
 
-            // get format posted
-            $format = empty($_POST['format']) ? '' : $_POST['format'];
-            echo json_encode($format); 
-            // get user name posted
-            $setname = empty($_POST['setname']) ? '' : $_POST['setname'];
+            $organization = Sentry::getUser()['organization'];
+            $path = App::config('pathfile')
+                . $organization . "/" . $format . "/" . $_FILES['myfile']['name'];
+            if (file_exists($path)) {
+                echo json_encode(['error'=>'Ce fichier existe déjà.']);
+                return;
+            } else {
+                move_uploaded_file($_FILES['myfile']['tmp_name'], $path);
+            }
+
         } catch ( \Exception $e ) {
             App::flash('error', $e->getMessage());
             $this->siteUrl('admin/displayUploadsAddFiles/'.$setname.'/'.$format);
@@ -487,8 +493,8 @@ Class FilesController extends BaseController
             'toto'
         );
         Response::redirect(
-            $this->siteUrl('admin/displayUploadsAddFiles/'.$setname.'/'.$format)
-        );*/
+            $this->siteUrl('admin/displayAddFiles/'.$setname.'/'.$format)
+        );
     }
     /**
      * Delete files in a set

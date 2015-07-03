@@ -24,13 +24,14 @@
                 <a href="{{ urlFor('listfile', {'set': setname, 'metadataformat': format}) }}" role="button" class="btn btn-primary">Voir la liste des fichiers</a>
             {% else %}
            {% endif %}
-                    <!--<form id="fileupload" action="{{ urlFor('uploadsfiles') }}" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="files[]" multiple />
-                    </form>-->
-                    <div id="fileuploader">Upload</div>
+                    <input type="hidden" id="setname" value="{{ setname }}" />
+                    <input type="hidden" id="format"  value="{{ format }}"/>
+
+                    <div id="fileuploader">Choisissez vos fichiers</div>
                     <div id="status"></div>
-                    <button id="startUpload">toto</button>
+                    <button id="startUpload" class="btn btn-primary">Démarrez l'upload</button>
                 </div>
+            <a href="{{ urlFor('displayaddfiles', {'set': setname, 'format': format}) }}" role="button" class="btn btn-primary">Ajoutez vos fichiers dans votre set</a>
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->
