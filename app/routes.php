@@ -60,6 +60,7 @@ Route::group(
 
         Route::post('/deleteFileById/:set', 'Admin\FilesController:deleteFileById')->name('deletefilebyid');
 
+        Route::post('/deleteFileUpload/:format', 'Admin\FilesController:deleteFileUpload')->name('deletefileupload');
         foreach (Module::getModules() as $module) {
             $module->registerAdminRoute();
         }

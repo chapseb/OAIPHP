@@ -609,4 +609,43 @@ Class FilesController extends BaseController
         }
     }
 
+    /**
+     * Delete file upload
+     *
+     * @param string $format Type of deleted file
+     *
+     * @return void
+     */
+    public function deleteFileUpload($format)
+    {
+
+        $listFiles = Input::post('list_files');
+
+        try {
+            if (empty($listFiles)) {
+                App::flash('error', 'Vous n\'avez pas de fichiers à supprimer');
+            }
+            $setname = Input::post('setname');
+            $format = Input::post('format');
+
+            $organization = Sentry::getUser()['organization'];
+            $path = App::config('pathfile') . $organization . "/" . $format . "/";
+            foreach ($listFiles as $file) {
+                if (!file_exists($path)) {
+                    echo json_encode(['error'=>'Ce fichier n\'existe pas.']);
+                } else {
+                    unlink($path . $file);
+                }
+            }
+            App::flash('message', 'Les fichiers ont bien été supprimés');
+        } catch ( \Exception $e ) {
+            App::flash('error', $e->getMessage());
+            $this->siteUrl('admin/displayUploadsAddFiles/'.$setname.'/'.$format);
+        }
+
+        Response::redirect(
+            $this->siteUrl('admin/displayUploadsDeleteFiles/' . $format)
+        );
+
+    }
 }

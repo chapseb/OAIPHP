@@ -52,6 +52,30 @@ $(function() {
         $('#myInput').focus();
     });
 
+    $('#myModalDeleteUpload').on('shown.bs.modal', function () {
+        var listFiles = [];
+        $('input:checked').each(function() {
+              listFiles.push($(this).val());
+        });
+        if( listFiles.indexOf("Tout cocher") != -1 ) {
+            $("#deleteFilesUploadConfirm").html("Vous avez selectionné tous les élements");
+            $("#confirmButton").removeAttr("disabled");
+        }
+        else if (listFiles.length < 1 ){
+            $("#deleteFilesUploadConfirm").html("Vous n'avez selectionné aucun fichier");
+            $("#confirmButton").attr("disabled", "disabled");
+        }
+        else {
+            var newHTML = [];
+            $.each(listFiles, function(index, value) {
+                    newHTML.push('<span>' + value + '</span>');
+            });
+            $("#deleteFilesUploadConfirm").html("Vous avez sélectionné les fichiers suivants :<br />" + newHTML.join("<br />"));
+            $("#confirmButton").removeAttr("disabled");
+        }
+        $('#myInput').focus();
+    });
+
     $('.btnDelete').on('click', function (e) {
         //e.preventDefault();
         var id = $(this).closest('tr').data('id');
