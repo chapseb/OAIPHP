@@ -62,7 +62,8 @@ $(function() {
 
 
     $('#btnDelteYes').unbind('click').bind('click', function () {
-        var nameset = $('#nameset ').text();
+        var nameset = '';
+        var nameset = $('#nameset').html();
         var id = $('#myremoveModal').data('id');
         var row = $('#myremoveModal').data('row');
         $.ajax({
@@ -98,7 +99,17 @@ $(function() {
     $('#listsettable').dataTable();
 
 
-    var uploadObj = $("#fileuploader").uploadFile({
+    
+   //$("#fileuploader").uploadFile(uploadObj);
+
+/*    $("#fileuploader").uploadFile({
+        url:"/public/admin/uploadsFiles",
+        multiple: true,
+        fileName:"myfile"
+    });
+*/
+});
+var uploadObj = $("#fileuploader").uploadFile({
         url:"/admin/uploadsFiles",
         method:"POST",
         allowedTypes:"xml",
@@ -134,13 +145,4 @@ $(function() {
         uploadObj.startUpload();
     });
 
-   //$("#fileuploader").uploadFile(uploadObj);
-
-/*    $("#fileuploader").uploadFile({
-        url:"/public/admin/uploadsFiles",
-        multiple: true,
-        fileName:"myfile"
-    });
-*/
-});
 

@@ -246,8 +246,8 @@ class BaseController
         $this->loadJs("plugins/metisMenu/jquery.metisMenu.js");
         $this->loadJs("sb-admin.js");
         $this->loadJs("jquery.dataTables.min.js");
-        $this->loadJs("app/application.js");
         $this->loadJs("jquery.uploadfile.min.js");
+        $this->loadJs("app/application.js");
     }
 
     /**
