@@ -38,7 +38,6 @@ Class HomeController extends BaseController
     public function doRegister()
     {
         try{
-            $test=0;
             if ($this->_testemail(Input::post('email'))== 0) {
                 if (strlen(Input::post('password')) >= 8 ) {
                     if (Input::post('password') == Input::post('confirm_password')) {
@@ -52,34 +51,39 @@ Class HomeController extends BaseController
                                 'activated'   => true,
                                 )
                         );
+                        $newUser->save();
                         Response::redirect($this->siteUrl('login'));
                     } else {
-                        App::flash('message', 'Password does not match.');
-                        $test=1;
+                        App::flash('message', 'Les mots de passe ne correspondent pas !');
+                        Response::redirect($this->siteUrl('register'));
                     }
                 } else {
                     App::flash(
                         'message',
                         'Votre mot de passe est trop court (plus de 8 charactères)'
                     );
+                    Response::redirect($this->siteUrl('register'));
                 }
+                $organization= Input::post('organization');
+                if (!empty($organization)
+                    && !file_exists(App::config('pathfile') . $organization)
+                ) {
+                    mkdir(App::config('pathfile') . $organization);
+                    $listFormat = DB::table('set_types')->select('name')->get();
+                    foreach ($listFormat as $format) {
+                    mkdir(App::config('pathfile') . $organization . '/' . $format['name'], 0755);
+                    }
+                } else {
+                    App::flash('message',  'Erreur lors de la création de votre dossier !');
+                    Response::redirect($this->siteUrl('register'));
+            }
             } else {
                 App::flash('message',  'Votre adresse email n\'est pas valide');
-            }
-            $newUser->save();
-            if (!empty(Input::post('organization'))
-                && !file_exists(App::config('pathfile') . Input::post('organization'))
-            ) {
-                mkdir(App::config('pathfile') . Input::post('organization'));
-                $listFormat = DB::table('set_types')->select('name')->get();
-                foreach ($listFormat as $format) {
-                    mkdir(App::config('pathfile') . Input::post('organization') . '/' . $format['name'], 0755);
-                }
-            }
-            $activationCode = $user->getActivationCode();
                 Response::redirect($this->siteUrl('register'));
+            }
         } catch(\Exception $e)
         {
+            Response::redirect($this->siteUrl('register'));
             App::flash('message', $e->getMessage());
         }
     }

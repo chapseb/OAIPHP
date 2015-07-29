@@ -21,6 +21,7 @@ class AdminController extends BaseController
             $user = Sentry::getUser();
             $this->data['organization'] = $user['organization'];
             $this->data['iduser'] = $user['id'];
+            $this->data['user'] = $user;
         }
         View::display('admin/index.twig', $this->data);
     }

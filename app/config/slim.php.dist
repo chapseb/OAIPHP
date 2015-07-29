@@ -25,5 +25,5 @@ $config['slim'] = array(
     // Routing
     'routes.case_sensitive' => true,
 
-    'pathfile' => '/var/www/ead_files/'
+    'pathfile' => '/var/www/files/oai_files/'
 );

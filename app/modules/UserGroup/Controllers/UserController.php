@@ -15,6 +15,8 @@ use \Exception;
 use \Admin\BaseController;
 use \Cartalyst\Sentry\Users\UserNotFoundException;
 use \Model\Settypes;
+use \Model\Deletedfiles;
+use \Model\Filepath;
 
 class UserController extends BaseController
 {
@@ -31,11 +33,12 @@ class UserController extends BaseController
     public function index($page = 1)
     {
         $user = Sentry::getUser();
-        $this->data['title'] = 'Liste des utilisateurs';
         $this->data['users'][0] = $user;
 
+        $this->data['title'] = 'Votre profil';
         if ($user->hasAccess('admin')) {
             $this->data['permission'] = 'admin';
+            $this->data['title'] = 'Liste des utilisateurs';
             $this->data['users'] = Sentry::findAllUsers();
         }
 
@@ -124,7 +127,52 @@ class UserController extends BaseController
             $user->email        = $input['email'];
             $user->first_name   = $input['first_name'];
             $user->last_name    = $input['last_name'];
-            $user->organization = $input['organization'];
+
+            if (file_exists(App::config('pathfile') . $input['organization'])) {
+                throw new Exception("Ce nom d'organisation est déjà pris.", 1);
+            }
+
+            if ($input['organization'] && !file_exists(App::config('pathfile') . $input['organization'])) {
+                $pathEnvironment = App::config('pathfile');
+                rename(
+                    $pathEnvironment.$user->organization,
+                    $pathEnvironment.$input['organization']
+                );
+
+                $filespathToChange = DB::table('filepaths')
+                    ->select('xml_path', 'oai_identifier')
+                    ->where('xml_path', 'LIKE', '%'.$user->organization.'%')
+                    ->get();
+                $deletedfilesToChange = DB::table('deletedfiles')
+                    ->select('xml_path', 'oai_identifier')
+                    ->where('xml_path', 'LIKE', '%'.$user->organization.'%')
+                    ->get();
+                foreach ($filespathToChange as $filepathToChange) {
+                    $path = str_replace(
+                        $pathEnvironment.$user->organization,
+                        '',
+                        $filepathToChange['xml_path']
+                    );
+                    $path = $pathEnvironment.$input['organization'].$path;
+                    DB::table('filepaths')
+                        ->where('oai_identifier', $filepathToChange['oai_identifier'])
+                        ->update(array('xml_path' => $path));
+                }
+
+                foreach ($deletedfilesToChange as $deletedfileToChange) {
+                    $path = str_replace(
+                        $pathEnvironment.$user->organization,
+                        '',
+                        $deletedfileToChange['xml_path']
+                    );
+                    $path = $pathEnvironment.$input['organization'].$path;
+                    DB::table('deletedfiles')
+                        ->where('oai_identifier', $deletedfileToChange['oai_identifier'])
+                        ->update(array('xml_path' => $path));
+                }
+
+                $user->organization = $input['organization'];
+            }
 
             if($input['password']){
                 $user->password = $input['password'];

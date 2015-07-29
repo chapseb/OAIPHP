@@ -16,7 +16,9 @@
             <table class="table table-striped table-condensed">
                 <thead>
                     <tr>
+                        {% if permission is not null %}
                         <th>#</th>
+                        {% endif %}
                         <th>Prénom</th>
                         <th>Nom</th>
                         <th>Email</th>
@@ -26,7 +28,9 @@
                 <tbody id="user-table">
                     {% for user in users %}
                     <tr id="user-row-{{ user.id }}">
+                        {% if permission is not null %}
                         <td>{{ user.id }}</td>
+                        {% endif %}
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.email }}</td>

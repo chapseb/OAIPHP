@@ -1,5 +1,8 @@
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
+        <p style="padding-left:20px;"><strong>Nom</strong> : {{user.last_name}}
+        <br/><strong>Prénom</strong> : {{user.first_name}}
+        <br/><strong>Organisation</strong> : {{user.organization}}</p>
         {{
             render_menu('admin_sidebar', 'ul',
                 {

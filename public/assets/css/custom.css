@@ -1,3 +1,21 @@
+a {
+    color: #A42C2C;
+    text-decoration: none;
+}
+a:hover {
+    color: black;
+    text-decoration: none;
+}
+.navbar-default .navbar-nav > li > a{
+    color: #A42C2C;
+    text-decoration: none;
+}
+.text-muted {
+    color: #A42C2C;
+}
+.btn-default{
+    color: #A42C2C;
+}
 .footer {
   padding-top: 40px;
   padding-bottom: 40px;
@@ -14,11 +32,28 @@
   padding: 14px 24px;
   font-size: 21px;
 }
-.dropdown-toggle  {
-    color: #781715;
+
+#navbarIntro {
+    float: right;
+    margin-top: 5px;
 }
+
+
+#headerIndex {
+    text-align:center;
+}
+
+#headerLogo {
+    height: 30px;
+}
+.navbar-default {
+    border: none;
+}
+/*.dropdown-toggle  {
+    color: #781715;
+}*/
 /** navbar customisation */
-.navbar{
+/*.navbar{
     min-height: 30px
 }
 
@@ -41,12 +76,12 @@
     color:#ddd;
 }
 
+ */
 img.navbar-logo{
     height:54px;
     margin: 5px 10px;
     float:left;
 }
-
 .page-header-box  h3, .page-header-box  a{
     margin-top:15px;
     border-bottom: none;
@@ -87,10 +122,12 @@ img.navbar-logo{
     z-index: 1001;
     top: 0px;
 }
-
+.form-horizontal {
+    max-width:60%;
+}
 
 .navbar-static-side a{
-    color:#8d0000;
+    color:black;
 }
 
 /** sidebar active */
@@ -139,6 +176,47 @@ img.navbar-logo{
     font-size: 16px;
 }
 
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.ajax-upload-dragdrop {
+    border:none;
+    color: Black;
+    text-align: left;
+    vertical-align: middle;
+    padding: 10px 10px 0px;
+}
 
 @media(min-width:768px) {
     .navbar-static-side {

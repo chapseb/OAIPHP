@@ -1,0 +1,94 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+        <nav>
+            <ul class="pager">
+                <li><a href="{{ urlFor('displaymanagefiles') }}"><span aria-hidden="true">&larr;</span> Retour vers la gestion des fichiers</a></li>
+            </ul>
+        </nav>
+        <h3 class="page-header">Suppression de fichiers dans le dossier {{ format }}</h3>
+        {% if flash.error is defined or flash.message is defined %}
+            {% if flash.message is defined %}
+            <div class= "message">
+                {{ flash.message }}
+            </div>
+            {% endif %}
+            {% if flash.error is defined %}
+            <div class="error">
+                {{ flash.error }}
+            </div>
+            {% endif %}
+            <a href="{{ urlFor('listfile', {'set': setname, 'metadataformat': format}) }}" role="button" class="btn btn-primary">Voir la liste des fichiers</a>
+        {% else %}
+        {% if files is not empty %}
+        <form role="form" class="form-horizontal" action="{{urlFor('deletefileupload', {'format': format })}}" method="POST">
+            <div class="form-group">
+                <div class="col-lg-8">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nom du fichier</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="checkAll" class="check" value="Tout cocher">
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>Tout cocher</td>
+                            </tr>
+
+                        {% for file in files %}
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="list_files[]" class="check" value="{{ file }}">
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>{{file}}</td>
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <input type="hidden" name="format" value="{{ format }}">
+            <button type="button" data-toggle="modal" data-target="#myModalDeleteUpload" class=" btn btn-success">Supprimer</button>
+            <div class="modal fade" id="myModalDeleteUpload" tabindex="-1" role="dialog" aria-labelledby="myModalDeleteUploadLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times</span></button>
+                        <h4>Confirmation de la suppression</h4>
+                    </div>
+                    <div class="modal-body" id="deleteFilesUploadConfirm">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                            <input type="submit" class="btn btn-success" id="confirmButton"/>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+            {% else %}
+                Il n'y a pas de fichier à supprimer dans ce format
+            {% endif %}
+            {% endif %}
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock %}

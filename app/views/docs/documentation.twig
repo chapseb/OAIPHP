@@ -1,0 +1,123 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        {{include('docs/topbar.twig')}}
+        {{include('docs/sidebar.twig')}}
+        <div id="page-wrapper" style="margin-top:50px">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">{{ title }}</h3>
+                </div>
+            <div>
+
+            <div class="row featurette">
+                <div class="col-md-7">
+                <h2 class="featurette-heading">Comment créer son compte et <span class="text-muted"> à quoi correspondent les informations demandées </span>?</h2>
+                <p>
+                    La plupart des champs sont des informations standards.<br />
+                    L'email et le mot de passe serviront à vous authentifier par la suite.
+                    <div class="alert alert-warning" role="alert">
+                        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Warning:</span>Attention, il ne peut exister qu'un seul compte par organisation.
+                    </div>
+                </p>
+            </div>
+            <div class="col-md-5">
+                <img class="featurette-image img-responsive center-block" src="/assets/images/inscription.png" alt="Connexion">
+            </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette">
+                <div class="col-md-7 col-md-push-5">
+                    <h2 class="featurette-heading">Comment créer un <span class="text-muted"> set</span> ?</h2>
+                    <p>
+                    La création d'un set est l'une des premières actions à effectuer.<br>
+                    Lors de votre connexion, vous vous trouverez dans votre tableau de bord avec plusieurs choix s'offrant à vous.<br>
+                    Il suffit de cliquer sur le bouton "Création" en dessous de "Créer un nouveau set".<br>
+                    Lorsque vous arrivez sur la nouvelle page, entrez le nom de votre set et validez.<br>
+                    Vous pouvez le voir apparaitre dans la liste de vos sets.<br>
+                    </p>
+                </div>
+                <div class="col-md-5 col-md-pull-7">
+                <img class="featurette-image img-responsive center-block" src="/assets/images/createSet.png" alt="Création d'un set">
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+           <div class="row featurette">
+                <div class="col-md-7" id="docFichiersPhysique">
+                <h2 class="featurette-heading">Comment ajouter ou supprimer des fichiers physiques ?</h2>
+                <p>
+            Deux solutions s'offrent à vous :
+            <ul class="list-group">
+                <li class="list-group-item" >
+                    Lorsque vous vous trouvez dans la liste des sets, cliquez sur la fleche à coté du + vert correspondant à votre set dans la colonne "Ajouter vos fichiers".
+                    Vous verrez dans la liste déroulante les formats à votre disposition, Choisissez-en un cliquat dessus.
+                    Vous voici dans une nouvelle page où vous allez pouvoir uploader vos fichiers physiques sur le serveur.
+                    Lorsque vous avez selectionné vos fichiers, vous pouvez démarrer l'upload.
+                    Vous pourrez ensuite ajouter ces fichiers dans votre set en allant à la prochaine étape. Vous trouverez l'explication sur la prochaine étape <a href="#docFichiersSet">ci dessous</a>.
+                </li>
+                <li class="list-group-item">
+                    Lorsque vous êtes dans votre tableau de bord, cliquez sur le bouton Gestion en dessous de "Gérer vos fichiers physiques". Vous voyez alors la liste des formats avec les actions qui leurs sont associés :
+                    <ul>
+                        <li>Liste des fichiers existants</li>
+                        <li><strong>Ajouter des fichiers</strong></li>
+                        <li>Supprimer des fichiers</li>
+                    </ul>
+                    Après avoir cliquer sur "Ajouter des fichiers", vous voici dans une nouvelle page où vous allez pouvoir uploader vos fichiers physiques sur le serveur.<br>
+                    Lorsque vous avez selectionné vos fichiers, vous pouvez démarrer l'upload.<br>
+                    Vos fichiers sont maintenant uploadés. A la fin de l'upload, vous pouvez cliquez sur le bouton Retour vers la gestion de fichiers.<br>
+                    Pour les ajouter dans un set vous devez retourner sur la liste des sets.<br>
+                </li>
+            </ul>
+
+                </p>
+            </div>
+            <div class="col-md-5">
+                <img class="featurette-image img-responsive center-block" src="/assets/images/listeFichiersSet.png" alt="Connexion">
+            </div>
+            </div>
+
+            <hr class="featurette-divider">
+            <div class="row featurette">
+                <div class="col-md-7 col-md-push-5" id="docFichiersSet">
+                <h2 class="featurette-heading">Comment ajouter et supprimer les fichiers d'un set ?</h2>
+                <p>
+            Lorsque vous vous trouvez dans la liste des sets, vous pouvez ajouter des fichiers à votre set.<br>
+            Il s'agit de la deuxième étape dans l'ajout de fichiers. Vous pouvez voir l'explication de la première étape <a href="#docFichiersPhysique">ci dessus</a>. La deuxième étape de l'jout consiste à ajouter des fichiers dans votre set (alors que la première consiste à uploader des fichiers sur le serveur).
+            Après avoir passé la première étape et cliquer sur "Ajoutez des fichiers dans votre set", la page vous présentera la liste des fichiers que vous pouvez ajouter dans votre set. Vous devez cocher les fichiers que vous voulez ajouter dans votre set et validez en cliquant sur le bouton Envoyer. Vous pouvez soit les selectionner un par un ou cliquez sur la case à cocher "Tout cocher" si vous voulez ajouter tous les fichiers dans votre set.
+                </p>
+            </div>
+            <div class="col-md-5 col-md-pull-7">
+                <img class="featurette-image img-responsive center-block" src="/assets/images/listeSets.png" alt="Connexion">
+            </div>
+            </div>
+
+            <hr class="featurette-divider">
+            <div class="row featurette">
+                <div class="col-md-7">
+                <h2 class="featurette-heading">Comment éditer son <span class="text-muted"> compte </span>?</h2>
+                <p>
+                    Il vous suffit de cliquer sur Utilisateur qui se trouve dans le menu à gauche de l'écran.<br /> Cela fait, cliquer sur le bouton Editer à droite.<br />Une popup s'ouvre et vous pourrez alors changer les informations que voulez éditer.
+                    <div class="alert alert-warning" role="alert">
+                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Warning:</span>Vous n'avez pas à remplir les champs de mots de passe si vous ne souhaitez pas les modifier.
+                    </div>
+                </p>
+            </div>
+            <!--<div class="col-md-5">
+                <img class="featurette-image img-responsive center-block" src="/assets/images/inscription.png" alt="Connexion">
+            </div>-->
+            </div>
+
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+{% endblock %}

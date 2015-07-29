@@ -1,0 +1,50 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        {{include('docs/topbar.twig')}}
+        {{include('docs/sidebar.twig')}}
+        <div id="page-wrapper" style="margin-top:50px">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">{{ title }}</h3>
+                </div>
+            <div>
+
+
+        <p>Notre application fournit une interface de gestion pour de nombreux fichiers qui seront mis à disposition de l’entrepôt OAI. Elle partage une base de données commune avec l'entrepôt développé par Yoann Moranville dans le cadre du projet de portail archivistique européen. Pour vous servir de cette interface vous n'avez qu'à vous <a href="{{ urlFor('formRegister')}}" target="_blank">inscrire</a>. Après cette étape, vous pourrez profiter de toutes les fonctionnalités de cette interface :</p>
+<br />
+        <h4>Gestion des sets</h4>
+        <ul>
+            <li>création d'un set</li>
+            <li>modification d'un set</li>
+            <li>suppression d'un set</li>
+            <li>Affichage des fichiers présents dans un set</li>
+        </ul>
+<br />
+        <h4>Gestion des fichiers</h4>
+        <p><ul>
+            <li>téléchargement des fichiers sur le serveur</li>
+            <li>ajout d'un ou plusieurs fichiers à un set</li>
+            <li>suppression d'un ou plusieurs fichiers d'un set existant</li>
+            <li>affichage des fichiers présents dans un set</li>
+            <li>affichage des fichers supprimés d'un set</li>
+            <li>restauration d'un ou plusieurs fichiers supprimés précédemment</li>
+        </ul>
+        <br />
+        <h4>Liaison avec le coeur de l'entrepôt OAI</h4>
+        <p>Un set créé sera automatiquement publié et disponible dans l’entrepôt. Cet entrepôt sera à même de savoir si un fichier est publié ou supprimé. La réponse renvoyée par l’entrepôt est au format XML et contient, selon la requête formulée, des informations sur l'entrepôt, une liste d'identifiants, de références (métadonnées) ou de sets (regroupement de notices correspondant à un thème donné).</p>
+
+
+        <h4></h4>
+        <p>Les sets sont un ensemble de fichiers dont l'utilisateur voit l'interet de les mettre ensemble. Pour ce faire, les fichiers constituant ce set doivent être téléchargés sur le serveur. Dans le même temps, un set doit être crée. Une fois ces deux étapes effectuées, les fichiers doivent être ajoutés à ce set.</p>
+        </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+{% endblock %}

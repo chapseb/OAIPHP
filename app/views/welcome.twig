@@ -1,46 +1,120 @@
 {% extends 'master.twig' %}
 
 {% block body %}
+    <div class="navbar-wrapper">
+      <div class="container">
 
-<div class="container">
-<!-- Jumbotron -->
-      <div class="jumbotron">
-        <h1>OAI PHP</h1>
-        <p class="lead">The Application OAI PMH client Open Source design by Anaphore</p>
+    <nav class="navbar navbar-default navbar-static-top">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+                <a class="navbar-brand" href="{{siteUrl('/')}}">
+                    <img id="headerLogo" class="featurette-image img-responsive center-block" src="/assets/images/logo_anaphore.png" alt="Anaphore">
+                </a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav" id="navbarIntro">
+                <li><a href="{{siteUrl('login')}}">Connexion</a></li>
+                <li><a href="{{ urlFor('formRegister') }}">S'inscrire</a></li>
+                <li><a href="#about"></a></li>
+             </ul>
+            </div>
+          </div>
+        </nav>
 
-        {% if template is defined %}
-            {% include template %}
-        {% else %}
-        <p><a class="btn btn-lg btn-danger" href="{{siteUrl('login')}}" role="button">Connexion</a></p>
-        <a href="{{ urlFor('formRegister') }}" class="btn btn-success btn-lg">S'inscrire</a>
       </div>
+    </div>
 
-      <!-- Example row of columns -->
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+   <div class="container marketing">
+<div class="page-header">
+        <h1 id="headerIndex">Application OAI/PMH</h1>
+      </div>
+{% if template is defined %}
+        {% include template %}
+    {% else %}
+      <!-- Three columns of text below the carousel -->
       <div class="row">
         <div class="col-lg-4">
-          <h2>Content</h2>
-          <p class="text-danger"></p>
-          <p><a class="btn btn-danger" href="#" role="button">View details &raquo;</a></p>
-        </div>
+          <img class="img-circle" src="http://www.fi2p.fr/images/logo_logiciels/XML.png" alt="Différents formats" width="140" height="140">
+          <h2>Support multi formats</h2>
+          <p>En plus de l'EAD, cette interface permet de constituer des sets comprenant des fichiers ape_ead, oai, oai_dc, edm et prochainement nomina.</p>
+          <!--<p><a class="btn btn-default" href="#" role="button">En savoir plus &raquo;</a></p>-->
+        </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
+          <img class="img-circle" src="http://www.docufree.com/wp-content/uploads/2013/08/The-Document-Cloud-300.jpg" alt="telecharger vos fichiers" width="140" height="140">
+          <h2>Gestion des fichiers</h2>
+          <p>Procédez, via notre interface, au téléchargement de vos fichiers de manière simple et transparente. Vous pourrez constituer facilement vos sets avec ces derniers.</p>
+          <!--<p><a class="btn btn-default" href="#" role="button">En savoir plus &raquo;</a></p>-->
+        </div><!-- /.col-lg-4 -->
+         <div class="col-lg-4">
+          <img class="img-circle" src="http://www.modulesca.com/phototeque/Documentation_6.jpg" alt="documentation" width="140" height="140">
           <h2>Documentation</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-danger" href="{{siteUrl('doc')}}" role="button">Lire la documentation &raquo;</a></p>
-       </div>
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-          <p><a class="btn btn-dangerdanger" href="#" role="button">View details &raquo;</a></p>
+          <p>Vous pouvez consultez notre documentation pour de plus amples informations sur notre application et le protocole OAI-PMH.</p>
+          <p><a class="btn btn-default" href="{{siteUrl('doc')}}" role="button">En savoir plus &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+     </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Gérer vos fichiers <span class="text-muted">facilement</span></h2>
+          <p class="lead">Notre interface permet d'uploader les fichiers directement. Ces derniers permettront de constituer vos sets qui seront moissonnées immédiatement par l'entrepôt.</p>
         </div>
-    {% endif %}
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive center-block" src="/assets/images/uploadFichiers.png" alt="Generic placeholder image">
+        </div>
       </div>
-      <!-- Site footer -->
-      <footer class="footer">
-        <p>&copy; Anaphore 2015</p>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading">Gérer vos sets de données <span class="text-muted">avec un tableau de bord clair et concis.</span></h2>
+          <p class="lead">Accédez facilement à toutes les actions (ajout, suppression, restauration de fichiers) en quelques clics.</p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" src="/assets/images/accueil.png" alt="Generic placeholder image">
+        </div>
+      </div>
+
+      <!--<hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
+          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        </div>
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive center-block" src="/assets/images/car-placeholder.jpg" alt="Generic placeholder image">
+        </div>
+      </div>-->
+
+    {% endif %}
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Retour en haut de page</a></p>
+        <p>&copy; {{ "now"|date("Y") }} Anaphore &middot;</p>
       </footer>
 
-    </div> <!-- /container -->
-</div>
-<!-- /.container -->
+    </div><!-- /.container -->
 
 {% endblock %}

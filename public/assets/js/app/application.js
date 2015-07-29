@@ -83,6 +83,14 @@ $(function() {
         $('#myremoveModal').data('id', id);
         $('#myremoveModal').data('row', row);
     });
+    
+    $('.btnRestore').on('click', function (e) {
+        //e.preventDefault();
+        var id = $(this).closest('tr').data('id');
+        var row = $(this).closest('tr').html();
+        $('#myRestoreModal').data('id', id);
+        $('#myRestoreModal').data('row', row);
+    });
 
 
     $('#btnDelteYes').unbind('click').bind('click', function () {
@@ -101,11 +109,38 @@ $(function() {
                 message='<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Le fichier a bien été supprimé !</div>';
             $('.answer').html(message);
             var dtdd = $(row).find('dl').html();
-            var newdeletedcell= '<td><dl>'+dtdd+'</dl></td><td><h4><span class="label label-danger">Supprimé</span></h4></td>';
-            $('#removelistFilestable tbody').append('<tr>'+newdeletedcell+'</tr>');
+            var newdeletedcell= '<td><dl>'+dtdd+'</dl></td><td><h4><span class="label label-danger">Supprimé</span></h4></td><td><button  data-toggle="modal" data-target="#myRestoreModal" class="btnRestore btn btn-default"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button></td>';
+            $('#removelistFilestable tbody').append('<tr data-id="'+id+'" >'+newdeletedcell+'</tr>');
             }else{
                 message='<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Erreur lors de la suppression du fichier :( </div>';
                 $('.answer').html(message);
+            }
+        }
+        });
+        $('[data-id=' + id + ']').remove();
+    });
+
+    $('#btnRestoreYes').unbind('click').bind('click', function () {
+        var nameset = '';
+        var nameset2 = $('#nameset2').html();
+        var id = $('#myRestoreModal').data('id');
+        var row = $('#myRestoreModal').data('row');
+        $.ajax({
+        type: "POST",
+        data: {id: id},
+        url: "/admin/restoreFileById/"+nameset2,
+        success: function(msg)
+        {
+            var message= '';
+            if (msg == "true"){
+                message='<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Le fichier a bien été restauré !</div>';
+            $('.answer2').html(message);
+            var dtdd = $(row).find('dl').html();
+            var newdeletedcell= '<td><dl>'+dtdd+'</dl></td><td><h4><span class="label label-warning">Restauré</span></h4></td><td><button  data-toggle="modal" data-target="#myremoveModal" class="btnDelete btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>';
+            $('#listFilestable tbody').append('<tr data-id="'+id+'">'+newdeletedcell+'</tr>');
+            }else{
+                message='<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Erreur lors de la restauration du fichier :( </div>';
+                $('.answer2').html(message);
             }
         }
         });
@@ -122,17 +157,8 @@ $(function() {
     });
     $('#listsettable').dataTable();
 
-
-    
-   //$("#fileuploader").uploadFile(uploadObj);
-
-/*    $("#fileuploader").uploadFile({
-        url:"/public/admin/uploadsFiles",
-        multiple: true,
-        fileName:"myfile"
-    });
-*/
 });
+
 var uploadObj = $("#fileuploader").uploadFile({
         url:"/admin/uploadsFiles",
         method:"POST",
@@ -148,19 +174,20 @@ var uploadObj = $("#fileuploader").uploadFile({
             return data;
         },*/
         //showStatusAfterSuccess:false,
-        dragDropStr: "<span><b>Faites glisser et déposez les fichiers</b></span>",
-        abortStr:"abandonner",
-        cancelStr:"résilier",
-        doneStr:"fait",
+        uploadButtonClass:"btn btn-default",
+        dragDropStr: " <div class='well'><span><b>Faites glisser et déposez les fichiers !</b></span></div>",
+        abortStr:"Abandonner",
+        cancelStr:"Résilier",
+        doneStr:"Fait",
         multiDragErrorStr: "Plusieurs Drag & Drop de fichiers ne sont pas autorisés.",
         extErrorStr:"n'est pas autorisé. Extensions autorisées:",
         sizeErrorStr:"n'est pas autorisé. Admis taille max:",
         uploadErrorStr:"Upload n'est pas autorisé",
         onSuccess:function(files,data,xhr){
-            $("#status").html("<font color='green'>L'upload est un succès.</font>");
+            $("#status").html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Le <strong>transfert</strong> est un succès.</div>");
         },
         onError: function(files,status,errMsg){
-            $("#status").html("<font color='red'>L'upload is n\'a pas fonctionné</font>");
+            $("#status").append("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Le <strong>transfert</strong> du fichier "+files+" n\'a pas fonctionné : "+errMsg+"</div>");
         }
     });
 

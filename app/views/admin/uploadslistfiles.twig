@@ -1,0 +1,37 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+        <nav>
+            <ul class="pager">
+                <li><a href="{{ urlFor('displaymanagefiles') }}"><span aria-hidden="true">&larr;</span> Retour vers la gestion des fichiers</a></li>
+            </ul>
+        </nav>
+
+        <div class="table-responsive">
+            <h3 class="page-header">Liste des fichiers de format {{ format }}</h3>
+            {% if listfiles is not empty%}
+            <table class="table" id="listFilestable">
+                <tbody>
+            {% for file in listfiles %}
+                    <tr>
+                        <td>
+                            <h4><span class="label label-primary">{{ file }}</span></h4>
+                        </td>
+                    </tr>
+            {% endfor %}
+               </tbody>
+          </table>
+            {% else %}
+            Le dossier est vide.
+            {% endif %}
+        </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock %}

@@ -7,9 +7,9 @@
         <div id="page-wrapper">
             {% block content %}
                 {% if template is defined %}
-                    {% include template %}
+                    {% include template with {'user': user}%}
                 {% else %}
-                    {% include 'admin/dashboard.twig' %}
+                    {% include 'admin/dashboard.twig' with{'user': user} %}
                 {% endif %}
             {% endblock %}
         </div>

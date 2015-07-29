@@ -1,0 +1,38 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        {{include('docs/topbar.twig')}}
+        {{include('docs/sidebar.twig')}}
+        <div id="page-wrapper" style="margin-top:50px">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">{{ title }}</h3>
+
+                    <h4>Caractéristiques et prérequis de l’application</h4>
+                    <p>L'interface de cette application a été réalisé en s'appuyant sur le projet open Source <a href="http://www.xsanisty.com/project/slim-starter/" target="_blank">SlimStarter</a> est une application construite avec Bootstrap et Slim selon une architecture modèle-vue-contrôleur, avec Eloquent comme fournisseur (Model) base de données et Twig comme moteur de template disponible en cliquant <a href="https://github.com/xsanisty/SlimStarter" target="_blank">ici</a>. Notre application fait également appel à une librairie supplémentaire Sentry en tant que fournisseur d’authentification utilisateur.</p>
+                    <h4>Base de données</h4>
+                        <p>L’application PHP et l’entrepôt doivent posséder l’accès à une base de données commune. De nombreux systèmes de bases de données sont possibles, mais seul a été testé Postgresql en version 9.3.<br />
+                    Il conviendra de créer une base dédiée à l’application, et un utilisateur dédié également.</p>
+                    <h4>Application PHP</h4>
+                    <ul>
+                        <li>PHP en version 5.4 minimum,</li>
+                        <li>le module PHP Dom,</li>
+                        <li>le module PHP SimpleXML,</li>
+                        <li>le module PHP PDO (en fonction de la base de données utilisée)</li>
+                    </ul>
+                    <h4>Entrepôt OAI</h4>
+                    <ul>
+                        <li>Java (Oracle ou OpenJDK) en version 1.7 minimum,</li>
+                        <li>Tomcat (ou un moteur de servlets équivalent) en version 7,</li>
+                        <li>L’archive de l’entrepôt OAI à renseigner auprès du Tomcat</li>
+                    </ul>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+{% endblock %}

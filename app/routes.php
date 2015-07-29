@@ -43,9 +43,11 @@ Route::group(
 
         Route::get('/displayAddFiles/:set/:format', 'Admin\FilesController:displayAddFiles')->name('displayaddfiles');
 
-        Route::get('/displayUploadsAddFiles/:set/:format', 'Admin\FilesController:displayUploadsAddFiles')->name('displayuploadsaddfiles');
+        Route::get('/displayUploadsAddFiles/:format(/:set)', 'Admin\FilesController:displayUploadsAddFiles')->name('displayuploadsaddfiles');
 
         Route::get('/displayUploadsDeleteFiles/:format', 'Admin\FilesController:displayUploadsDeleteFiles')->name('displayuploadsdeletefiles');
+
+        Route::get('/displayUploadsListFiles/:format', 'Admin\FilesController:displayUploadsListFiles')->name('displayuploadslistfiles');
 
         Route::get('/displayDeleteFiles/:set/:format', 'Admin\FilesController:displayDeleteFiles')->name('displaydeletefiles');
 
@@ -59,8 +61,13 @@ Route::group(
         Route::post('/deleteFile/:set', 'Admin\FilesController:deleteFiles')->name('deletesetfiles');
 
         Route::post('/deleteFileById/:set', 'Admin\FilesController:deleteFileById')->name('deletefilebyid');
+        
+        Route::post('/restoreFileById/:set', 'Admin\FilesController:restoreFileById')->name('restorefilebyid');
 
         Route::post('/deleteFileUpload/:format', 'Admin\FilesController:deleteFileUpload')->name('deletefileupload');
+
+        Route::get('/displayManageFiles', 'Admin\FilesController:displayManageFiles')->name('displaymanagefiles');
+
         foreach (Module::getModules() as $module) {
             $module->registerAdminRoute();
         }

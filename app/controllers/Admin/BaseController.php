@@ -4,7 +4,7 @@ namespace Admin;
 use \App;
 use \Menu;
 use \Module;
-
+use \Sentry;
 class BaseController extends \BaseController
 {
 
@@ -19,6 +19,11 @@ class BaseController extends \BaseController
             'icon'  => 'dashboard',
             'url'   => 'admin'
         ));
+        $documentation = $adminMenu->createItem('Documentation', array(
+            'label' => 'Documenation',
+            'icon'  => 'file-text',
+            'url'   => 'doc'
+        ));
         $logout = $adminMenu->createItem('Logout', array(
             'label' => 'Deconnexion',
             'icon'  => 'power-off',
@@ -32,6 +37,7 @@ class BaseController extends \BaseController
         foreach (Module::getModules() as $module) {
             $module->registerAdminMenu();
         }
+        $adminMenu->addItem('documentation', $documentation);
         $adminMenu->addItem('logout', $logout);
     }
 }

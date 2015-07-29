@@ -9,19 +9,25 @@
                 <div class="col-lg-12">
                     <h3 class="page-header">{{ title }}</h3>
                 </div>
-<div>
-<h4>Le protocole OAI-PMH</h4>
-<p>Un protocole simple et ouvert qui
-<ul>
-    <li>
-    favorise l’interopérabilité et le signalement complémentaire des ressources culturelles sans duplication ni déchargement des documents numériques primaires</li>
-    <li>accroît la visibilitésur le web de l’offre documentaire en abattant certaines barrières du web invisible en rendant possible le signalement de ressources non accessibles aux moteurs de recherche</li>
-    <li>permet une gestion simple et automatisable des mises à jour par le fournisseur de service (mécanisme asynchrone, prévoit l’actualisation des liens, en répercutant les dernières modifications des réservoirs sources, sans copier à nouveau l’intégralité des données (la charge n’en étant que plus légère pour les serveurs)</li>
-    <li>s’appuie sur un format de description générique (Dublin Core simple) pour les besoins transdisciplinaires (Dublin Core simple : format obligatoire, sans interdire des formats adaptés à des besoins plus spécialisés)</li>
-</ul>
-</div>
-                <!-- /.col-lg-12 -->
-            </div>
+            <div>
+<p>L'OAI-PMH est le sigle de Open archives initiative protocol for metadata harvestingi.Cela signifie "protocole pour la collecte de métadonnées de l'Initiative pour les Archives ouvertes". Le protocole OAI-PMH est un moyen d'échanger sur Internet des métadonnées entre plusieurs institutions, afin de multiplier les accès aux documents numériques. Il permet d'accroître la visibilité des collections numériques sur Internet, de reconstituer virtuellement des corpus à partir de ressources accessibles sur
+différents sites, d'alimenter des portails thématiques.</p>
+            <p>Il s'agit d'un protocole simple et ouvert qui :
+            <ul>
+                <li>favorise l’interopérabilité et le signalement complémentaire des ressources culturelles sans duplication ni déchargement des documents numériques primaires</li>
+                <li>accroît la visibilitésur le web de l’offre documentaire en abattant certaines barrières du web invisible en rendant possible le signalement de ressources non accessibles aux moteurs de recherche</li>
+                <li>permet une gestion simple et automatisable des mises à jour par le fournisseur de service (mécanisme asynchrone, prévoit l’actualisation des liens, en répercutant les dernières modifications des réservoirs sources, sans copier à nouveau l’intégralité des données (la charge n’en étant que plus légère pour les serveurs)</li>
+                <li>s’appuie sur un format de description générique (Dublin Core simple) pour les besoins transdisciplinaires (Dublin Core simple : format obligatoire, sans interdire des formats adaptés à des besoins plus spécialisés)</li>
+            </ul>
+            </p>
+            <p>Ce protocole repose sur la présence de deux types d'acteurs distincts :
+            <ul>
+                <li>les fournisseurs de données</li>
+                <li>les fournisseurs de services</li>
+            </ul>
+            Les premiers vont donner accès à leur catalogue à travers ce que l'on nomme un "entrepôt OAI", notre outil, qui est chargé de répondre aux requêtes formulées par les fournisseurs de service. La réponse donnée est au format XML et contient selon la requête formulée : des informations sur l'entrepôt, une liste d'identifiants, de références(métadonnées) ou des "sets" (regroupement de notices correspondant à un thème donné).
+            </p>
+
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->

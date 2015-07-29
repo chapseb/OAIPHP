@@ -1,0 +1,50 @@
+{% extends 'master.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <h3 class="page-header text-center">Liste des formats disponibles</h3>
+            <table class="table table-responsive">
+                <thead>
+                <tr>
+                    <th>Nom du format</th>
+                    <th>Liste des fichiers existants</th>
+                    <th>Ajouter des fichiers</th>
+                    <th>Supprimer des fichiers</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for format in listformats %}
+                    <tr>
+                        <td>
+                            <h4><span class="label label-info">{{ format.name }}</span></h4>
+                        </td>
+                        <td>
+                            <a type="button" href="{{ urlFor('displayuploadslistfiles',{ 'format': format.name }) }}" class="btn btn-primary">
+                                Voir les fichiers
+                            </a>
+                        </td>
+                        <td>
+                            <a type="button" href="{{ urlFor('displayuploadsaddfiles',{ 'format': format.name }) }}" class="btn btn-success">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                Ajouter des fichiers
+                            </a>
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-danger" href="{{ urlFor('displayuploadsdeletefiles',{ 'format': format.name }) }}">
+                                <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span>
+                                Supprimer des fichiers
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+          </table>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock %}

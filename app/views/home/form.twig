@@ -4,7 +4,7 @@
     {{ flash.message }}
 </div>
 {% endif %}
-<form role="form" class="form-horizontal" action="{{ urlFor('doRegister') }}" method="post" enctype="multipart/form-data">
+<form role="form" class="form-horizontal text-center" action="{{ urlFor('doRegister') }}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="user_id" name="id">
 
     <div class="form-group">
@@ -18,7 +18,7 @@
     <div class="form-group">
         <label for="first_name" class="col-lg-4 control-label">Prénom</label>
         <div class="col-lg-8">
-            <input type="text" class="input-sm form-control validate[required]" name="first_name" id="first_name" required>
+            <input type="text" class="input-sm form-control validate[required]" name="first_name" id="first_name" placeholder="Prenom" required>
         </div>
         {{ flash.firstName }}
     </div>
@@ -55,5 +55,5 @@
         </div>
     </div>
 
-    <input type="submit" class="btn btn-success" value="Enregistrer" />
+    <input type="submit" class="btn lead btn-lg btn-default text-center" value="Enregistrer" />
 </form>

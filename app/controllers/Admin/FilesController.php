@@ -2,7 +2,6 @@
 namespace Admin;
 
 use \Model\Filepath;
-use \Model\ConcordUserFilePath;
 use \Model\Resumptiontoken;
 use \Model\Setinfos;
 use \Model\Settypes;
@@ -61,6 +60,7 @@ Class FilesController extends BaseController
                 unset($this->data['listformats'][$key]);
             }
         }
+        $this->data['user'] = Sentry::getUser();
         $this->data['template'] = 'admin/listsets.twig';
         App::render('admin/index.twig', $this->data);
     }
@@ -85,6 +85,7 @@ Class FilesController extends BaseController
             ->get();
         $this->data['template'] = 'admin/listformats.twig';
         $this->data['nameset']  = $nameSet;
+        $this->data['user'] = Sentry::getUser();
         App::render('admin/index.twig', $this->data);
     }
 
@@ -113,6 +114,7 @@ Class FilesController extends BaseController
 
         $this->data['template'] = 'admin/listfiles.twig';
         $this->data['set'] = $nameSet;
+        $this->data['user'] = Sentry::getUser();
         App::render('admin/index.twig', $this->data);
     }
 
@@ -125,6 +127,7 @@ Class FilesController extends BaseController
     {
         $this->data['title'] ='OAI | Creation d\'un set';
         $this->data['template'] = 'admin/createset.twig';
+        $this->data['user'] = Sentry::getUser();
         App::render('admin/index.twig', $this->data);
     }
 
@@ -159,15 +162,16 @@ Class FilesController extends BaseController
             );
         }
     }
+
     /**
      * Render the upload files template
      *
-     * @param string $setname Name of the set
      * @param string $format  Type of format
+     * @param string $setname Name of the set
      *
      * @return void
      */
-    public function displayUploadsAddFiles($setname, $format)
+    public function displayUploadsAddFiles($format, $setname="")
     {
         $this->data['title'] ='OAI | Sélectionner vos fichiers';
         $organization = Sentry::getUser()['organization'];
@@ -176,6 +180,34 @@ Class FilesController extends BaseController
         //$this->data['files']    = $listFiles;
         $this->data['format']   = $format;
         $this->data['template'] = 'admin/uploadsaddfiles.twig';
+        $this->data['user'] = Sentry::getUser();
+        App::render('admin/index.twig', $this->data);
+    }
+
+    /**
+     * Render the upload files template
+     *
+     * @param string $format Type of format
+     *
+     * @return void
+     */
+    public function displayUploadsListFiles($format)
+    {
+        $this->data['title'] ='OAI | Fichiers existants';
+        $organization = Sentry::getUser()['organization'];
+        $path = App::config('pathfile') . $organization . "/" . $format;
+        $oaiDirectory = opendir($path) or die('Erreur');
+        $listFiles = array();
+        while ($entry = @readdir($oaiDirectory)) {
+            if ($entry != '.' && $entry != '..') {
+                array_push($listFiles, $entry);
+            }
+        }
+        closedir($oaiDirectory);
+        $this->data['format']    = $format;
+        $this->data['listfiles'] = $listFiles;
+        $this->data['user'] = Sentry::getUser();
+        $this->data['template']  = 'admin/uploadslistfiles.twig';
         App::render('admin/index.twig', $this->data);
     }
 
@@ -204,6 +236,7 @@ Class FilesController extends BaseController
         $this->data['files']    = $listFiles;
         $this->data['format']   = $format;
         $this->data['template'] = 'admin/addfiles.twig';
+        $this->data['user'] = Sentry::getUser();
         App::render('admin/index.twig', $this->data);
     }
 
@@ -228,6 +261,7 @@ Class FilesController extends BaseController
         $this->data['setname']  = $setname;
         $this->data['format']   = $format;
         $this->data['template'] = 'admin/deletefiles.twig';
+        $this->data['user'] = Sentry::getUser();
         App::render('admin/index.twig', $this->data);
     }
 
@@ -248,6 +282,7 @@ Class FilesController extends BaseController
         $listFiles = array_diff(scandir($path), array('..', '.'));
         $this->data['files'] = $listFiles;
         $this->data['format'] = $format;
+        $this->data['user'] = Sentry::getUser();
         $this->data['template'] = 'admin/uploaddeletefiles.twig';
         App::render('admin/index.twig', $this->data);
     }
@@ -270,7 +305,7 @@ Class FilesController extends BaseController
         $date           = date('Y-m-d H:i:s');
         if (!empty($filesToAdd)) {
             foreach ( $filesToAdd as &$file) {
-                $file = "/" . $organization . "/" . $format . "/" . $file;
+                $file = $organization . "/" . $format . "/" . $file;
             }
             $listDeletingFiles = DB::table('deletedfiles')
                 ->lists('xml_path');
@@ -387,7 +422,7 @@ Class FilesController extends BaseController
                         $addFile = new \Filepath;
                         $addFile->data_set          = $setname;
                         $addFile->metadata_format   = $format;
-                        $addFile->xml_path          = $file;
+                        $addFile->xml_path          = App::config('pathfile') . $file;
                         $addFile->oai_identifier    = uniqid();
                         $addFile->creation_date     = $create;
                         $addFile->modification_date = $create;
@@ -498,25 +533,14 @@ Class FilesController extends BaseController
             $organization = Sentry::getUser()['organization'];
             $path = App::config('pathfile')
                 . $organization . "/" . $format . "/" . $_FILES['myfile']['name'];
-            if (file_exists($path)) {
-                echo json_encode(['error'=>'Ce fichier existe déjà.']);
-                return;
-            } else {
-                move_uploaded_file($_FILES['myfile']['tmp_name'], $path);
-            }
-
+            move_uploaded_file($_FILES['myfile']['tmp_name'], $path);
+            Response::redirect(
+                $this->siteUrl('admin/displayUploadsAddFiles/'.$format)
+            );
         } catch ( \Exception $e ) {
             App::flash('error', $e->getMessage());
-            $this->siteUrl('admin/displayUploadsAddFiles/'.$setname.'/'.$format);
+            $this->siteUrl('admin/displayUploadsAddFiles/'.$format);
         }
-
-        App::flash(
-            'message',
-            'toto'
-        );
-        Response::redirect(
-            $this->siteUrl('admin/displayAddFiles/'.$setname.'/'.$format)
-        );
     }
     /**
      * Delete files in a set
@@ -610,6 +634,41 @@ Class FilesController extends BaseController
     }
 
     /**
+     * Restore file in a set by Id
+     *
+     * @param string $set Set which we restore file
+     *
+     * @return void
+     */
+    public function restoreFileById($set)
+    {
+        $id = Input::post('id');
+        if (!empty($id)) {
+            try {
+                $databaseSelect = DB::table('deletedfiles')
+                ->select('*')
+                ->where('id', $id)
+                ->get();
+                $xml_path = $databaseSelect[0]['xml_path'];
+                $oai_identifier = $databaseSelect[0]['oai_identifier'];
+                // update filepaths table
+                $date           = date('Y-m-d H:i:s');
+                $databaseDeleted = \Deletedfiles::where('id', $id)
+                                    ->where('data_set', $set );
+                $databaseDeleted->delete();
+                $databaseRestaured = \Filepath::where('oai_identifier', $oai_identifier)
+                    ->where('data_set', $set )
+                    ->update(['xml_path' => $xml_path, 'modification_date' => $date, 'state' => 'Published']);
+                /* creation and save of Deletedfiles object */
+            } catch ( \Exception $e ) {
+                echo json_encode('error supression sql');
+            }
+            echo json_encode(true);
+        } else {
+            echo json_encode(false);
+        }
+    }
+    /**
      * Delete file upload
      *
      * @param string $format Type of deleted file
@@ -625,27 +684,68 @@ Class FilesController extends BaseController
             if (empty($listFiles)) {
                 App::flash('error', 'Vous n\'avez pas de fichiers à supprimer');
             }
-            $setname = Input::post('setname');
             $format = Input::post('format');
 
             $organization = Sentry::getUser()['organization'];
             $path = App::config('pathfile') . $organization . "/" . $format . "/";
             foreach ($listFiles as $file) {
-                if (!file_exists($path)) {
+                if (!file_exists($path . $file)) {
                     echo json_encode(['error'=>'Ce fichier n\'existe pas.']);
                 } else {
+
+                    $pathFileDelete = $organization . "/" . $format . "/" . $file;
+                    $databaseSelect = DB::table('filepaths')
+                    ->select('*')
+                    ->where('xml_path', $pathFileDelete)
+                    ->get();
+                    if (!empty($databaseSelect)) {
+                        // update filepaths table
+                        $databaseDeleted = \Filepath::where('xml_path', $pathFileDelete)
+                            ->update(['xml_path' => 'NULL', 'state' => 'Removed']);
+
+                        /* creation and save of Deletedfiles object */
+                        $deleteFile                 = new \Deletedfiles;
+                        $deleteFile->xml_path       = $pathFileDelete;
+                        $deleteFile->oai_identifier
+                            = $databaseSelect[0]['oai_identifier'];
+                        $deleteFile->data_set       = $set;
+                        $deleteFile->metadata_format
+                            = $databaseSelect[0]['metadata_format'];
+                        $deleteFile->save();
+                    }
+
                     unlink($path . $file);
                 }
             }
             App::flash('message', 'Les fichiers ont bien été supprimés');
         } catch ( \Exception $e ) {
             App::flash('error', $e->getMessage());
-            $this->siteUrl('admin/displayUploadsAddFiles/'.$setname.'/'.$format);
+            $this->siteUrl('admin/displayUploadsDeleteFiles/'.$format);
         }
 
         Response::redirect(
             $this->siteUrl('admin/displayUploadsDeleteFiles/' . $format)
         );
 
+    }
+
+    /**
+     * Display manage files views
+     *
+     * @return void
+     */
+    public function displayManageFiles()
+    {
+        $this->data['title'] ='OAI | Gérer vos fichiers';
+
+        $user = Sentry::getUser();
+        $this->data['listformats']
+            = DB::table('set_types')
+            ->select('name')
+            ->get();
+
+        $this->data['user'] = Sentry::getUser();
+        $this->data['template'] = 'admin/managefiles.twig';
+        App::render('admin/index.twig', $this->data);
     }
 }

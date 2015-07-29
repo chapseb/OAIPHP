@@ -6,13 +6,19 @@
         <div class="col-sm-8">
         <nav>
             <ul class="pager">
-                <li><a href="{{ urlFor('listset') }}"><span aria-hidden="true">&larr;</span> Retour vers la liste des sets</a></li>
-                <li><a href="{{ urlFor('displayaddfiles', {'set': setname, 'format': format}) }}" >
-                    Ajoutez vos fichiers dans votre set<span aria-hidden="true">&rarr;</span>
-                </a></li>
-            </ul>
+                {%if setname is not empty%}
+                <li>
+                    <a href="{{ urlFor('listset') }}"><span aria-hidden="true">&larr;</span> Retour vers la liste des sets</a>
+                </li>
+                <li>
+                    <a href="{{ urlFor('displayaddfiles', {'set': setname, 'format': format}) }}" >Ajoutez vos fichiers dans votre set<span aria-hidden="true">&rarr;</span></a>
+                </li>
+                {%else%}
+                <li><a href="{{ urlFor('displaymanagefiles')}}" ><span aria-hidden="true">&larr;</span> Retour vers la gestion de fichiers</a></li>
+                {%endif%}
+           </ul>
         </nav>
-            <h3 class="page-headeri">Ajout de fichiers {{ format }} dans le set {{ setname }}</h2>
+            <h3 class="page-header">Ajout de fichiers {{ format }} {%if setname is not empty%}dans le set {{ setname }}{%endif%}</h2>
             {% if flash.error is defined or flash.message is defined %}
                 {% if flash.message is defined %}
                 <div class= "message">
@@ -26,13 +32,20 @@
                 {% endif %}
                 <a href="{{ urlFor('listfile', {'set': setname, 'metadataformat': format}) }}" role="button" class="btn btn-primary">Voir la liste des fichiers</a>
             {% else %}
-           {% endif %}
+            {% endif %}
                     <input type="hidden" id="setname" value="{{ setname }}" />
                     <input type="hidden" id="format"  value="{{ format }}"/>
-
-                    <div id="fileuploader">Choisissez vos fichiers</div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div id="fileuploader">Choisissez vos fichiers</div>
+                            <div class="alert alert-warning" role="alert">
+                                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                                <span class="sr-only">Warning:</span>Attention les fichiers existants seront écrasés.
+                            </div>
+                        </div>
+                    </div>
                     <div id="status"></div>
-                    <button id="startUpload" class="btn btn-primary">Démarrez l'upload</button>
+                    <button id="startUpload" class="btn btn-default">Démarrez l'upload</button>
                 </div>
         <!-- /.col-lg-12 -->
     </div>
